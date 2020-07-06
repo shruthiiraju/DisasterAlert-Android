@@ -1,5 +1,6 @@
 package com.example.disasteralert;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -12,6 +13,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,7 +24,23 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Initialising layout components
         FloatingActionButton fab = findViewById(R.id.fab);
+        Button DisasterMapButton = findViewById(R.id.disasterMapButton);
+        Button ReportButton = findViewById(R.id.reportButton);
+        Button DonateButton = findViewById(R.id.donateButton);
+        Button LiveFeedButton = findViewById(R.id.liveFeedButton);
+
+        //OnClick: ReportButton should take you to ReportCreationActivity.
+        ReportButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent goToReportActivity = new Intent(MainActivity.this, ReportCreationActivity.class);
+                goToReportActivity.putExtra("key", "Shruthiiii"); //Optional parameters
+                MainActivity.this.startActivity(goToReportActivity);
+            }
+        });
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -13,11 +13,13 @@
             android:gravity="center">
 
                 <Button
+                    android:id="@+id/disasterMapButton"
                     android:drawableTop="@drawable/ic_map_24px"
                     style="@style/HomeButtons"
                     android:text="@string/main_disaster_map">
                 </Button>
                 <Button
+                    android:id="@+id/reportButton"
                     style="@style/HomeButtons"
                     android:drawableTop="@drawable/ic_report_problem_24px"
                     android:text="@string/main_report">
@@ -29,11 +31,13 @@
             android:orientation="horizontal"
             android:gravity="center">
                 <Button
+                    android:id="@+id/donateButton"
                     style="@style/HomeButtons"
                     android:drawableTop="@drawable/ic_public_24px"
                     android:text="@string/main_donate">
                 </Button>
                 <Button
+                    android:id="@+id/liveFeedButton"
                     style="@style/HomeButtons"
                     android:drawableTop="@drawable/ic_rss_feed_24px"
                     android:text="@string/main_live_feed">
