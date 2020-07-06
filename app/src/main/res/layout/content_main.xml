@@ -1,19 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:orientation="vertical">
 
-    <fragment
-        android:id="@+id/nav_host_fragment"
-        android:name="androidx.navigation.fragment.NavHostFragment"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:defaultNavHost="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:navGraph="@navigation/nav_graph" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+                <Button
+                    android:drawableTop="@drawable/ic_map_24px"
+                    style="@style/HomeButtons"
+                    android:text="@string/main_disaster_map">
+                </Button>
+                <Button
+                    style="@style/HomeButtons"
+                    android:drawableTop="@drawable/ic_report_problem_24px"
+                    android:text="@string/main_report">
+                </Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+                <Button
+                    style="@style/HomeButtons"
+                    android:drawableTop="@drawable/ic_public_24px"
+                    android:text="@string/main_donate">
+                </Button>
+                <Button
+                    style="@style/HomeButtons"
+                    android:drawableTop="@drawable/ic_rss_feed_24px"
+                    android:text="@string/main_live_feed">
+                </Button>
+        </LinearLayout>
+
+</LinearLayout>
