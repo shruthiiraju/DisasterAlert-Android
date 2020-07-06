@@ -1,5 +1,6 @@
 package com.example.disasteralert;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -14,8 +15,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static Context mContext;
+    private static GetLocations locations;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
         Button ReportButton = findViewById(R.id.reportButton);
         Button DonateButton = findViewById(R.id.donateButton);
         Button LiveFeedButton = findViewById(R.id.liveFeedButton);
+
+        //Initialising locations
+        setContext(this);
+        locations = new GetLocations();
+        locations.getLocation();
 
         //OnClick: ReportButton should take you to ReportCreationActivity.
         ReportButton.setOnClickListener(new View.OnClickListener(){
@@ -46,6 +56,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with something", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations)
+        DonateButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, locations.myCoordinates.toString(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -70,5 +88,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public static Context getContext() {
+        return mContext;
+    }
+
+    public void setContext(Context mContext) {
+        this.mContext = mContext;
     }
 }
