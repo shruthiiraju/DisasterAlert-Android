@@ -63,7 +63,9 @@ public class MainActivity extends AppCompatActivity {
         DonateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, locations.myCoordinates.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(MainActivity.this, locations.myCoordinates.toString(), Toast.LENGTH_LONG).show();
+                Intent goToDonationActivity = new Intent(MainActivity.this, DonationActivity.class);
+                startActivity(goToDonationActivity);
             }
         });
     }
