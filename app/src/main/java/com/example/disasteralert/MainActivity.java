@@ -59,13 +59,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations)
+        //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations(no longer))
         DonateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
                 //Toast.makeText(MainActivity.this, locations.myCoordinates.toString(), Toast.LENGTH_LONG).show();
                 Intent goToDonationActivity = new Intent(MainActivity.this, DonationActivity.class);
                 startActivity(goToDonationActivity);
+            }
+        });
+
+        //OnClick: DisasterMapButton Should take you to DisasterActivity
+        DisasterMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, DisasterActivity.class));
             }
         });
     }
