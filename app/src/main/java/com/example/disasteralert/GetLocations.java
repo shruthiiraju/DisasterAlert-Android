@@ -29,7 +29,7 @@ import static androidx.core.content.PermissionChecker.checkSelfPermission;
 
 public class GetLocations implements LocationListener {
 
-    private final String TAG = "MainActivity";
+    private final String TAG = "GetLocationsClass";
     final static int PERMISSION_ALL = 1;
     final static String[] PERMISSIONS = {Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
     LocationManager locationManager;
@@ -75,10 +75,14 @@ public class GetLocations implements LocationListener {
             return;
         }
         assert provider != null;
-        locationManager.requestLocationUpdates(provider, 100, 0, this);
         Location location = locationManager.getLastKnownLocation(provider);
         Log.d(TAG, "requestLocation: i asked for location");
-        myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
+        if(location != null){
+            myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
+            Log.d(TAG, "getLocation: " + myCoordinates);
+        } else {
+            locationManager.requestLocationUpdates(provider, 1000, 0, this);
+        }
     }
 
     private boolean isLocationEnabled() {
@@ -124,6 +128,7 @@ public class GetLocations implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
+        locationManager.removeUpdates(this);
         myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         Log.d(TAG, "onLocationChanged: " + myCoordinates);
     }
