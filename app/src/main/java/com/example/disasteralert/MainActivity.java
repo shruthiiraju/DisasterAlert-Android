@@ -6,10 +6,13 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.os.Parcelable;
 import android.view.View;
 
 import android.view.Menu;
@@ -21,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static Context mContext;
     private static GetLocations locations;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +32,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        //Initialising Firebase authentication
+        mAuth = FirebaseAuth.getInstance();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if(currentUser == null) {
+            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
+        }
 
         //Initialising layout components
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -59,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations)
+        //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations(no longer))
         DonateButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -68,6 +81,20 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(goToDonationActivity);
             }
         });
+
+        //OnClick: DisasterMapButton Should take you to DisasterActivity
+        DisasterMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, DisasterActivity.class));
+            }
+        });
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
     }
 
     @Override
