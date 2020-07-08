@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateAccActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="left"
+        android:layout_margin="30dp"
+        android:text="Enter your Details:"
+        android:textSize="18dp"
+        android:textColor="#000"
+        android:id="@+id/create_name" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/create_name"
+        android:id="@+id/name"
+        android:layout_margin="15dp"
+        android:inputType="textEmailAddress"
+        android:hint="Enter Name" />
+
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/name"
+        android:id="@+id/email"
+        android:layout_margin="15dp"
+        android:hint="Enter Email Address" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@+id/email"
+        android:id="@+id/number"
+        android:layout_margin="15dp"
+        android:hint="Enter Your Number" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Send Code"
+        android:layout_below="@+id/number"
+        android:id="@+id/create_send"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint="OTP"
+        android:layout_below="@+id/create_send"
+        android:layout_margin="15dp"
+        android:id="@+id/create_code" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Create Account"
+        android:layout_below="@+id/create_code"
+        android:id="@+id/create_acc"
+        android:layout_marginTop="30dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp" />
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        android:id="@+id/create_pb" />
+
+</RelativeLayout>
