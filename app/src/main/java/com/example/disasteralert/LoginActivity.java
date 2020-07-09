@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
     Button send, verify;
     ProgressBar pb;
     String CodeSent,phoneNumber;
-    boolean flag = true;
+    boolean flag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,20 +64,8 @@ public class LoginActivity extends AppCompatActivity {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!checkUsers()){
-                    try{
-                        SendVerificationCode();
-                    }
-                    catch (Exception e){
-                        pb.setVisibility(View.GONE);
-                        Toast.makeText(LoginActivity.this, "Fill each field", Toast.LENGTH_SHORT)
-                                .show();
-                    }
-                }
-                else{
-                    Toast.makeText(LoginActivity.this, "Sign Up to Enter Credentials", Toast.LENGTH_LONG)
-                            .show();
-                }
+                //Check is user exists in database
+                checkUsers();
             }
         });
 
@@ -99,8 +87,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    private boolean checkUsers() {
-        phoneNumber = "+91" + number.getText().toString();
+    private void checkUsers() {
+        phoneNumber = number.getText().toString();
+        if(phoneNumber.length() < 10)
+            return;
 
         db.collection("users")
                 .get()
@@ -108,24 +98,43 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            pb.setVisibility(View.VISIBLE);
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 Map<String, Object> map = document.getData();
                                 try {
-                                    if (map.get("number").toString().equals(number))
+                                    if (map.get("number").toString().equals(phoneNumber)) {
                                         flag = true;
+                                    }
                                 }
                                 catch (Exception e) {
                                     flag = false;
                                 }
                             }
+                            checkUsersComplete();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
                     }
                 });
+    }
 
-        return flag;
+    private void checkUsersComplete() {
+        Log.d(TAG, "checkUsers: " + flag);
+        if(flag){
+            try{
+                SendVerificationCode();
+            }
+            catch (Exception e){
+                pb.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "Fill each field", Toast.LENGTH_SHORT)
+                        .show();
+            }
+        }
+        else{
+            Toast.makeText(LoginActivity.this, "Sign Up to Enter Credentials", Toast.LENGTH_LONG)
+                    .show();
+        }
     }
 
     private void CheckOnVerification() {
@@ -143,6 +152,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void SendVerificationCode() {
+        pb.setVisibility(View.GONE);
         phoneNumber = "+91" + number.getText().toString();
 
         if(number.getText().toString().isEmpty()){
@@ -207,6 +217,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             pb.setVisibility(View.GONE);
+            Log.d(TAG, "onVerificationFailed: failed");
             Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
         }
 
