@@ -79,10 +79,9 @@ public class GetLocations implements LocationListener {
         Log.d(TAG, "requestLocation: i asked for location");
         if(location != null){
             myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
-            Log.d(TAG, "getLocation: " + myCoordinates);
-        } else {
-            locationManager.requestLocationUpdates(provider, 1000, 0, this);
         }
+        locationManager.requestLocationUpdates(provider, 5000, 0, this);
+        Log.d(TAG, "getLocation: " + myCoordinates);
     }
 
     private boolean isLocationEnabled() {
@@ -128,7 +127,7 @@ public class GetLocations implements LocationListener {
 
     @Override
     public void onLocationChanged(@NonNull Location location) {
-        locationManager.removeUpdates(this);
+        //locationManager.removeUpdates(this);
         myCoordinates = new LatLng(location.getLatitude(), location.getLongitude());
         Log.d(TAG, "onLocationChanged: " + myCoordinates);
     }

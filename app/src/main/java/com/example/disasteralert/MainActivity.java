@@ -23,7 +23,7 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity {
 
     private static Context mContext;
-    private static GetLocations locations;
+    public static GetLocations locations;
     private FirebaseAuth mAuth;
 
     @Override
