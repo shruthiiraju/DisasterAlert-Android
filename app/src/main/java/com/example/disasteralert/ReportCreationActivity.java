@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 public class ReportCreationActivity extends AppCompatActivity {
 
@@ -19,6 +21,9 @@ public class ReportCreationActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        //Initialising layout components
+        Spinner spin = (Spinner) findViewById(R.id.spinnerReportType);
+
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -27,5 +32,11 @@ public class ReportCreationActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        //Setting Report Type spinner dropdown values
+        String[] eventTypes = { "Flood", "Fire", "Injury", "Illness", "Earthquake" };
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventTypes);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spin.setAdapter(adapter);
     }
 }
