@@ -43,7 +43,6 @@
             android:id="@+id/textReportNumberPeople"
             android:layout_width="40dp"
             android:layout_height="wrap_content"
-            android:hint="Number of people affected"
             android:inputType="number" />
 
         <TextView
@@ -61,8 +60,9 @@
             android:gravity="top"/>
 
         <Button
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
+            android:textAllCaps="false"
             android:text="Add a Photo/Video">
         </Button>
 
