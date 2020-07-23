@@ -8,16 +8,35 @@ import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
+
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
+
+import java.util.Map;
+
+import static com.example.disasteralert.App.CHANNEL_1_ID;
+import static com.example.disasteralert.App.CHANNEL_2_ID;
+import static com.example.disasteralert.App.CHANNEL_3_ID;
+import static com.example.disasteralert.App.CHANNEL_4_ID;
 
 
 public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
+
+    private NotificationManagerCompat notificationManager;
 
     /**
      * Called when message is received.
@@ -47,6 +66,29 @@ public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
         // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
+        if (remoteMessage.getData().size() > 0) {
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
+            Map<String, String> map = remoteMessage.getData();
+
+            String priority = map.get("priority");
+
+            notificationManager = NotificationManagerCompat.from(this);
+
+            switch (priority) {
+                case "1":
+                    buildNotification(CHANNEL_1_ID, map);
+                    break;
+                case "2":
+                    buildNotification(CHANNEL_2_ID, map);
+                    break;
+                case "3":
+                    buildNotification(CHANNEL_3_ID, map);
+                    break;
+                default:
+                    buildNotification(CHANNEL_4_ID, map);
+                    break;
+            }
+        }
 
         // Check if message contains a notification payload.
         if (remoteMessage.getNotification() != null) {
@@ -58,6 +100,19 @@ public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
     }
     // [END receive_message]
 
+
+    private void buildNotification(String CHANNEL_ID, Map<String, String> map) {
+        int notification_id = Integer.parseInt(map.get("notification_id").substring(map.get("notification_id").length() - 9));
+
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, CHANNEL_ID);
+
+        notification
+                .setSmallIcon(R.drawable.ic_public_24px)
+                .setContentTitle(map.get("title"))
+                .setContentText(map.get("body"));
+
+        notificationManager.notify(notification_id, notification.build());
+    }
 
     // [START on_new_token]
 
@@ -95,6 +150,21 @@ public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
      */
     private void sendRegistrationToServer(String token) {
         // TODO: Implement this method to send token to your app server.
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        if (mAuth.getCurrentUser() != null) {
+            db.collection("users")
+                    .document(mAuth.getCurrentUser().getUid())
+                    .update("token", token)
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: ", e);
+                        }
+                    });
+        }
     }
 
     /**
