@@ -42,6 +42,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.os.Parcelable;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 
@@ -217,31 +220,71 @@ public class MainActivity extends AppCompatActivity {
 
             public void onShake() {
                 //Toast.makeText(MainActivity.this, "Shake!", Toast.LENGTH_SHORT).show();
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(500);
+                }
                 updateSOSReport();
             }
         });
     }
 
     private void updateSOSReport() {
-        HashMap<String, Object> map = new HashMap<>();
-        map.put("time", String.valueOf(System.currentTimeMillis() / 1000L));
-        map.put("number", mAuth.getCurrentUser().getPhoneNumber());
-        if(staticlocation == null){
-            map.put("location", "null");
+        final ConnectionChecker connectionChecker = new ConnectionChecker();
+        if(connectionChecker.isOnline()) {
+            HashMap<String, Object> map = new HashMap<>();
+            map.put("time", System.currentTimeMillis() / 1000L);
+            map.put("number", mAuth.getCurrentUser().getPhoneNumber());
+            if (staticlocation == null) {
+                map.put("location", "null");
+            } else {
+                GeoPoint geoPoint = new GeoPoint(staticlocation.getLatitude(), staticlocation.getLongitude());
+                map.put("location", geoPoint);
+            }
+            db.collection("sosreports")
+                    .document(mAuth.getCurrentUser().getPhoneNumber())
+                    .set(map)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(MainActivity.this, "Emergency sos sent", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+            return;
         }
         else{
-            GeoPoint geoPoint = new GeoPoint(staticlocation.getLatitude(), staticlocation.getLongitude());
-            map.put("location", geoPoint);
+            String smsbody = "New Emergency from App\n" +
+                    mAuth.getCurrentUser().getPhoneNumber() + "\n" +
+                    mAuth.getCurrentUser().getUid() + "\n" +
+                    "Emergency sos sent\n" +
+                    System.currentTimeMillis()/1000L + "\n" +
+                    "1\n";
+            if (staticlocation == null){
+                smsbody += "null";
+            }
+            else{
+                GeoPoint geoPoint = new GeoPoint(staticlocation.getLatitude(), staticlocation.getLongitude());
+                smsbody += geoPoint.toString();
+            }
+            sendSMS(smsbody);
         }
-        db.collection("sosreports")
-                .document(mAuth.getCurrentUser().getPhoneNumber())
-                .set(map)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(MainActivity.this, "Emergency sos sent", Toast.LENGTH_SHORT).show();
-                    }
-                });
+    }
+
+    public void sendSMS(String body) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("+12059272598", null, body, null, null);
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
+        }
     }
 
     private LocationCallback getLocationCallback() {
