@@ -15,11 +15,10 @@
     <Spinner
         android:layout_width="match_parent"
         android:layout_height="30dp"
+        android:textStyle="bold"
         android:layout_alignParentBottom="true"
         android:id="@+id/spinnerMaps"
         android:layout_margin="20dp"
-        android:background="#696969"
-        android:popupBackground="#696969"
+        android:background="@drawable/spinner_outline"
         android:gravity="center_horizontal" />
-
 </RelativeLayout>
