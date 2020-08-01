@@ -42,6 +42,7 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'com.google.maps.android:android-maps-utils:0.4.4'
 
     // dexter for permissions
     implementation 'com.karumi:dexter:6.2.1'
