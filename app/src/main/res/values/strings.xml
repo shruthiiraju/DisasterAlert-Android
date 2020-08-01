@@ -27,4 +27,5 @@
         <item>Injury</item>
         <item>Illness</item>
     </string-array>
+    <string name="title_activity_loved_ones">LovedOnesActivity</string>
 </resources>
