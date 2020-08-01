@@ -1,6 +1,7 @@
 package com.example.disasteralert;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -11,9 +12,14 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
@@ -64,7 +70,16 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
     private ArrayList<String> postals = new ArrayList<>();
     private ArrayList<String> affected = new ArrayList<>();
     private HashMap<String, String> total_affected = new HashMap<>();
+    private ArrayList<String> type = new ArrayList<>();
     private String address = "";
+    private String city;
+    private ArrayList<WeightedLatLng> latLngArrayListFlood = new ArrayList<>();
+    private ArrayList<WeightedLatLng> latLngArrayListFire = new ArrayList<>();
+    private ArrayList<WeightedLatLng> latLngArrayListInjury = new ArrayList<>();
+    private ArrayList<WeightedLatLng> latLngArrayListIllness = new ArrayList<>();
+    private ArrayList<WeightedLatLng> latLngArrayListEarthquake = new ArrayList<>();
+    private TileOverlay FloodOverlay, FireOverlay, InjuryOverlay, IllnessOverlay, EarthquakeOverlay;
+    private boolean flag = false;
 
     @SuppressLint("MissingPermission")
     @Override
@@ -88,7 +103,8 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
                     public void onLocationResult(LocationResult locationResult) {
                         super.onLocationResult(locationResult);
                         location = locationResult.getLastLocation();
-                        updateMap();
+                        if(!flag)
+                            updateMap();
                     }
                 },
                 DisasterActivity.this.getMainLooper()
@@ -99,22 +115,155 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         //Initialise the content
-        final FloatingActionButton floatingActionButton = findViewById(R.id.check);
+        final Spinner spinner = findViewById(R.id.spinnerMaps);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.maps, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-        //onClicks
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                updateReport();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(spinner.getSelectedItem().equals("Flood")){
+                    updateReportFlood();
+                }
+                else if(spinner.getSelectedItem().equals("Fire")){
+                    updateReportFire();
+                }
+                else if(spinner.getSelectedItem().equals("Injury")){
+                    updateReportInjury();
+                }
+                else if(spinner.getSelectedItem().equals("Illness")){
+                    updateReportIllness();
+                }
+                else if(spinner.getSelectedItem().equals("Earthquake")) {
+                    updateReportEarthquake();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
         updateHeatMap();
+    }
 
+    private void updateReportFlood() {
+
+        if(FireOverlay != null)
+            FireOverlay.remove();
+        if(InjuryOverlay != null)
+            InjuryOverlay.remove();
+        if(EarthquakeOverlay != null)
+            EarthquakeOverlay.remove();
+        if(IllnessOverlay != null)
+            IllnessOverlay.remove();
+        try {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(latLngArrayListFlood)
+                    .radius(50)
+                    .build();
+            FloodOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mMap.setMinZoomPreference(5.0f);
+        }
+        catch (Exception e){
+            Toast.makeText(this, "No reports of this disaster available in this area", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateReportEarthquake() {
+        if(FireOverlay != null)
+            FireOverlay.remove();
+        if(InjuryOverlay != null)
+            InjuryOverlay.remove();
+        if(FloodOverlay != null)
+            FloodOverlay.remove();
+        if(IllnessOverlay != null)
+            IllnessOverlay.remove();
+        try {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(latLngArrayListEarthquake)
+                    .radius(50)
+                    .build();
+            EarthquakeOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mMap.setMinZoomPreference(5.0f);
+        }
+        catch (Exception e){
+            Toast.makeText(this, "No reports of this disaster available in this area", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateReportInjury() {
+        if(FireOverlay != null)
+            FireOverlay.remove();
+        if(FloodOverlay != null)
+            FloodOverlay.remove();
+        if(EarthquakeOverlay != null)
+            EarthquakeOverlay.remove();
+        if(IllnessOverlay != null)
+            IllnessOverlay.remove();
+        try {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(latLngArrayListInjury)
+                    .radius(50)
+                    .build();
+            InjuryOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mMap.setMinZoomPreference(5.0f);
+        }
+        catch (Exception e){
+            Toast.makeText(this, "No reports of this disaster available in this area", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateReportIllness() {
+        if(FireOverlay != null)
+            FireOverlay.remove();
+        if(InjuryOverlay != null)
+            InjuryOverlay.remove();
+        if(EarthquakeOverlay != null)
+            EarthquakeOverlay.remove();
+        if(FloodOverlay != null)
+            FloodOverlay.remove();
+        try {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(latLngArrayListIllness)
+                    .radius(50)
+                    .build();
+            IllnessOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mMap.setMinZoomPreference(5.0f);
+        }
+        catch (Exception e){
+            Toast.makeText(this, "No reports of this disaster available in this area", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateReportFire() {
+        if(FloodOverlay != null)
+            FloodOverlay.remove();
+        if(InjuryOverlay != null)
+            InjuryOverlay.remove();
+        if(EarthquakeOverlay != null)
+            EarthquakeOverlay.remove();
+        if(IllnessOverlay != null)
+            IllnessOverlay.remove();
+        try {
+            HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
+                    .weightedData(latLngArrayListFire)
+                    .radius(50)
+                    .build();
+            FireOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
+            mMap.setMinZoomPreference(5.0f);
+        }
+        catch (Exception e){
+            Toast.makeText(this, "No reports of this disaster available in this area", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void updateMap() {
+        flag = true;
         LatLng location = new LatLng(this.location.getLatitude(), this.location.getLongitude());
         mMap.moveCamera(CameraUpdateFactory.newLatLng(location));
         CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -135,6 +284,7 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                 locations.add((GeoPoint) documentSnapshot.get("location"));
                                 affected.add((String)documentSnapshot.get("numberOfPeopleAffected"));
+                                type.add((String)documentSnapshot.get("type"));
                             }
                             loadHeatMap();
                         }
@@ -146,7 +296,6 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
     }
 
     private void loadHeatMap() {
-        ArrayList<WeightedLatLng> latLngArrayList = new ArrayList<>();
         for(GeoPoint location : locations){
             try{
                 Geocoder geocoder = new Geocoder(this, Locale.getDefault());
@@ -160,11 +309,11 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
             } catch (Exception e) {
 //            Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
             }
-            Log.d(TAG, "loadHeatMap: " + address);
+            Log.d(TAG, "loadHeatMap: " + address + "\nCity: " + city);
             String listadd[] = address.split(",");
             int i = listadd.length;
             int j = listadd[i - 2].split(" ").length;
-            postals.add(listadd[i - 2].split(" ")[j - 1]);
+                postals.add(listadd[i - 2].split(" ")[j - 1]);
         }
         for(int i=0; i<postals.size(); i++){
             Pattern p = Pattern.compile("\\d+");
@@ -184,36 +333,58 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
         for(int i=0; i<postals.size(); i++){
             if(Integer.parseInt(total_affected.get(postals.get(i))) > 0 && Integer.parseInt(total_affected.get(postals.get(i))) < 10){
                 WeightedLatLng latLng = new WeightedLatLng(new LatLng(locations.get(i).getLatitude(), locations.get(i).getLongitude()), 0.2);
-
-                latLngArrayList.add(latLng);
+                if(type.get(i).equals("Flood"))
+                    latLngArrayListFlood.add(latLng);
+                else if(type.get(i).equals("Fire"))
+                    latLngArrayListFire.add(latLng);
+                else if(type.get(i).equals("Injury"))
+                    latLngArrayListInjury.add(latLng);
+                else if(type.get(i).equals("Illness"))
+                    latLngArrayListIllness.add(latLng);
+                else if(type.get(i).equals("Earthquake"))
+                    latLngArrayListEarthquake.add(latLng);
             }
             else if(Integer.parseInt(total_affected.get(postals.get(i))) > 10 && Integer.parseInt(total_affected.get(postals.get(i))) < 30){
                 WeightedLatLng latLng = new WeightedLatLng(new LatLng(locations.get(i).getLatitude(), locations.get(i).getLongitude()), 0.6);
-
-                latLngArrayList.add(latLng);
+                if(type.get(i).equals("Flood"))
+                    latLngArrayListFlood.add(latLng);
+                else if(type.get(i).equals("Fire"))
+                    latLngArrayListFire.add(latLng);
+                else if(type.get(i).equals("Injury"))
+                    latLngArrayListInjury.add(latLng);
+                else if(type.get(i).equals("Illness"))
+                    latLngArrayListIllness.add(latLng);
+                else if(type.get(i).equals("Earthquake"))
+                    latLngArrayListEarthquake.add(latLng);
             }
             else if(Integer.parseInt(total_affected.get(postals.get(i))) > 30 && Integer.parseInt(total_affected.get(postals.get(i))) < 70){
                 WeightedLatLng latLng = new WeightedLatLng(new LatLng(locations.get(i).getLatitude(), locations.get(i).getLongitude()), 0.8);
-
-                latLngArrayList.add(latLng);
+                if(type.get(i).equals("Flood"))
+                    latLngArrayListFlood.add(latLng);
+                else if(type.get(i).equals("Fire"))
+                    latLngArrayListFire.add(latLng);
+                else if(type.get(i).equals("Injury"))
+                    latLngArrayListInjury.add(latLng);
+                else if(type.get(i).equals("Illness"))
+                    latLngArrayListIllness.add(latLng);
+                else if(type.get(i).equals("Earthquake"))
+                    latLngArrayListEarthquake.add(latLng);
             }
             else{
                 WeightedLatLng latLng = new WeightedLatLng(new LatLng(locations.get(i).getLatitude(), locations.get(i).getLongitude()), 1.0);
-
-                latLngArrayList.add(latLng);
+                if(type.get(i).equals("Flood"))
+                    latLngArrayListFlood.add(latLng);
+                else if(type.get(i).equals("Fire"))
+                    latLngArrayListFire.add(latLng);
+                else if(type.get(i).equals("Injury"))
+                    latLngArrayListInjury.add(latLng);
+                else if(type.get(i).equals("Illness"))
+                    latLngArrayListIllness.add(latLng);
+                else if(type.get(i).equals("Earthquake"))
+                    latLngArrayListEarthquake.add(latLng);
             }
         }
-        HeatmapTileProvider mProvider = new HeatmapTileProvider.Builder()
-                .weightedData(latLngArrayList)
-                .radius(50)
-                .build();
-        TileOverlay mOverlay = mMap.addTileOverlay(new TileOverlayOptions().tileProvider(mProvider));
-        mMap.setMinZoomPreference(5.0f);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(14.9,77.6)));
-    }
-
-    private void updateReport() {
-
+        updateReportFlood();
     }
 
     @Override
