@@ -18,4 +18,11 @@
     <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
     <string name="submit_report">Submit Report</string>
     <string name="getting_location">Getting Location…</string>
+    <string-array name="maps">
+        <item>Flood</item>
+        <item>Fire</item>
+        <item>Earthquake</item>
+        <item>Injury</item>
+        <item>Illness</item>
+    </string-array>
 </resources>
