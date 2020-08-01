@@ -182,10 +182,10 @@ public class ReportCreationActivity extends AppCompatActivity {
                     if((String)mapElement.getKey()!="location") {
                         String key = (String) mapElement.getValue();
                         Log.e(TAG, key);
-                        smsBody += "\n" + key;
+                        smsBody += key + "\n";
                     }
                 }
-                smsBody += "\n" + location.getLatitude() + "," + location.getLongitude();
+                smsBody += location.getLatitude() + "," + location.getLongitude();
                     final ConnectionChecker connectionChecker = new ConnectionChecker();
                 if(connectionChecker.isOnline()){
                     report.put("layer", "first");
@@ -197,7 +197,6 @@ public class ReportCreationActivity extends AppCompatActivity {
                     report.put("layer", "third");
                 }
                 Log.e(TAG, report.toString());
-                sendSMS("Test");
                 final StorageReference imageRef = storage.getReference()
                         .child(String.valueOf(new Date().getTime()));
 
