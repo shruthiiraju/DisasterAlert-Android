@@ -178,7 +178,7 @@ public class ReportCreationActivity extends AppCompatActivity {
                 report.put("type", eventTypes[reportTypeSpinner.getSelectedItemPosition()]);
                 report.put("numberOfPeopleAffected", PEOPLE_AFFECTED_PICKER_CHOICES[peopleAffectedPicker.getValue()]);
                 report.put("description", descriptionEditText.getText().toString());
-                String smsBody = "New Report\n";
+                String smsBody = "New Report from App\n";
                 for (Map.Entry mapElement : report.entrySet()) {
                     if((String)mapElement.getKey()!="location") {
                         String key = (String) mapElement.getValue();
