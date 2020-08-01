@@ -100,8 +100,6 @@ public class ReportCreationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_creation);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -110,7 +108,6 @@ public class ReportCreationActivity extends AppCompatActivity {
         //Initialising layout components
         reportTypeSpinner = (Spinner) findViewById(R.id.spinnerReportType);
         peopleAffectedPicker = findViewById(R.id.picker_people_affected);
-        FloatingActionButton fab = findViewById(R.id.fab);
         addPictureButton = findViewById(R.id.button_add_picture);
         reportImageView = findViewById(R.id.image_view_report);
         submitReportButton = findViewById(R.id.button_submit_report);
@@ -143,14 +140,6 @@ public class ReportCreationActivity extends AppCompatActivity {
         peopleAffectedPicker.setDisplayedValues(PEOPLE_AFFECTED_PICKER_CHOICES);
         peopleAffectedPicker.setValue(1);
         peopleAffectedPicker.setWrapSelectorWheel(false);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         //Setting Report Type spinner dropdown values
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventTypes);
@@ -193,6 +182,7 @@ public class ReportCreationActivity extends AppCompatActivity {
                 } else if (!connectionChecker.isOnline() && connectionChecker.isMobileAvailable(getApplicationContext())) {
                     report.put("layer", "second");
                     sendSMS(smsBody);
+                    return;
                 }
                 else {
                     report.put("layer", "third");
