@@ -6,6 +6,9 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -65,11 +68,15 @@ public class MainActivity extends AppCompatActivity {
     protected static final long STATUS_PING_INTERVAL = 5 * 60 * 1000;  // 5 minutes
 
     public static GetLocations locations;
+    private Location staticlocation = null;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     private LocationRequest locationRequest;
+
+    private SensorManager mSensorManager;
+    private ShakeListener mSensorListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -202,6 +209,41 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LiveFeedsActivity.class));
             }
         });
+
+
+        //Setting up shake shake
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorListener = new ShakeListener();
+
+        mSensorListener.setOnShakeListener(new ShakeListener.OnShakeListener() {
+
+            public void onShake() {
+                //Toast.makeText(MainActivity.this, "Shake!", Toast.LENGTH_SHORT).show();
+                updateSOSReport();
+            }
+        });
+    }
+
+    private void updateSOSReport() {
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("time", String.valueOf(System.currentTimeMillis() / 1000L));
+        map.put("number", mAuth.getCurrentUser().getPhoneNumber());
+        if(staticlocation == null){
+            map.put("location", "null");
+        }
+        else{
+            GeoPoint geoPoint = new GeoPoint(staticlocation.getLatitude(), staticlocation.getLongitude());
+            map.put("location", geoPoint);
+        }
+        db.collection("sosreports")
+                .document(mAuth.getCurrentUser().getPhoneNumber())
+                .set(map)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(MainActivity.this, "Emergency sos sent", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private LocationCallback getLocationCallback() {
@@ -218,6 +260,7 @@ public class MainActivity extends AppCompatActivity {
                             locationResult.getLastLocation().getLongitude()
                         )
                 );
+                staticlocation = locationResult.getLastLocation();
 
                 mAuth = FirebaseAuth.getInstance();
                 db  = FirebaseFirestore.getInstance();
@@ -331,4 +374,18 @@ public class MainActivity extends AppCompatActivity {
 //    public void setContext(Context mContext) {
 //        this.mContext = mContext;
 //    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mSensorManager.registerListener(mSensorListener,
+                mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+                SensorManager.SENSOR_DELAY_UI);
+    }
+
+    @Override
+    protected void onPause() {
+        mSensorManager.unregisterListener(mSensorListener);
+        super.onPause();
+    }
 }
