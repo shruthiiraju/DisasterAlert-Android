@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
 
-
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -19,19 +18,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".LiveFeedsActivity"></activity>
         <!-- [START fcm_default_icon] -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification_important_24px" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-        <!-- [END fcm_default_icon] -->
+            android:resource="@color/colorAccent" /> <!-- [END fcm_default_icon] -->
         <!-- [START fcm_default_channel] -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id" />
-        <!-- [END fcm_default_channel] -->
+            android:value="@string/default_notification_channel_id" /> <!-- [END fcm_default_channel] -->
         <activity android:name=".CreateAccActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -62,14 +60,10 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- Status Ping BroadcastReceiver-->
+        </service> <!-- Status Ping BroadcastReceiver -->
         <receiver
             android:name=".StatusPingReceiver"
-            android:exported="false" />
-
-        <!-- File Provider for files -->
+            android:exported="false" /> <!-- File Provider for files -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.fileprovider"
@@ -79,7 +73,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>

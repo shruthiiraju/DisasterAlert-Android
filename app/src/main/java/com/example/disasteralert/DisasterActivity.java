@@ -14,6 +14,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -282,7 +283,14 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot documentSnapshot : task.getResult()){
-                                locations.add((GeoPoint) documentSnapshot.get("location"));
+                                try {
+                                    locations.add((GeoPoint) documentSnapshot.get("location"));
+                                }
+                                catch (Exception e){
+                                    Location location = new Location("");
+                                    location.setLatitude((Double)documentSnapshot.get("lat"));
+                                    location.setLongitude((Double)documentSnapshot.get("lon"));
+                                }
                                 affected.add((String)documentSnapshot.get("numberOfPeopleAffected"));
                                 type.add((String)documentSnapshot.get("type"));
                             }
