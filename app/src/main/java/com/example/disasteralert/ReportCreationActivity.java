@@ -38,6 +38,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import android.provider.MediaStore;
+import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -52,6 +53,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
 
 import static com.example.disasteralert.MainActivity.FASTEST_UPDATE_INTERVAL;
 import static com.example.disasteralert.MainActivity.MAX_UPDATE_INTERVAL;
@@ -96,7 +98,6 @@ public class ReportCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("CONNECTION STATUS", Boolean.toString(isNetworkAvailable() && getNetworkState()));
         setContentView(R.layout.activity_report_creation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -169,24 +170,34 @@ public class ReportCreationActivity extends AppCompatActivity {
 
                 final HashMap<String, Object> report = new HashMap<>();
                 report.put("byPhone", mAuth.getCurrentUser().getPhoneNumber());
-                report.put("byEmail", mAuth.getCurrentUser().getEmail());
-                report.put("byUid", mAuth.getCurrentUser().getUid());
+                //report.put("byEmail", mAuth.getCurrentUser().getEmail());
+                report.put("byUid", mAuth.getCurrentUser().getUid().toString());
                 report.put("location", new GeoPoint(location.getLatitude(), location.getLongitude()));
-                report.put("time", new Date().getTime());
+                report.put("time", String.valueOf(new Date().getTime()));
                 report.put("type", eventTypes[reportTypeSpinner.getSelectedItemPosition()]);
                 report.put("numberOfPeopleAffected", PEOPLE_AFFECTED_PICKER_CHOICES[peopleAffectedPicker.getValue()]);
                 report.put("description", descriptionEditText.getText().toString());
-                final ConnectionChecker connectionChecker = new ConnectionChecker();
+                String smsBody = "";
+                for (Map.Entry mapElement : report.entrySet()) {
+                    if((String)mapElement.getKey()!="location") {
+                        String key = (String) mapElement.getValue();
+                        Log.e(TAG, key);
+                        smsBody += "\n" + key;
+                    }
+                }
+                smsBody += "\n" + location.getLatitude() + "," + location.getLongitude();
+                    final ConnectionChecker connectionChecker = new ConnectionChecker();
                 if(connectionChecker.isOnline()){
                     report.put("layer", "first");
                 } else if (!connectionChecker.isOnline() && connectionChecker.isMobileAvailable(getApplicationContext())) {
                     report.put("layer", "second");
+                    sendSMS(smsBody);
                 }
                 else {
                     report.put("layer", "third");
                 }
                 Log.e(TAG, report.toString());
-
+                sendSMS("Test");
                 final StorageReference imageRef = storage.getReference()
                         .child(String.valueOf(new Date().getTime()));
 
@@ -289,6 +300,19 @@ public class ReportCreationActivity extends AppCompatActivity {
                     Log.e(TAG, "onStop: FILE NOT DELETED");
                 }
             }
+        }
+    }
+
+    public void sendSMS(String body) {
+        try {
+            SmsManager smsManager = SmsManager.getDefault();
+            smsManager.sendTextMessage("+919986009302", null, body, null, null);
+            Toast.makeText(getApplicationContext(), "Message Sent",
+                    Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
+                    Toast.LENGTH_LONG).show();
+            ex.printStackTrace();
         }
     }
 }
