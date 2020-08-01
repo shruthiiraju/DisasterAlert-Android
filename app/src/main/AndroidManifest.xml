@@ -18,8 +18,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LiveFeedsActivity"></activity>
-        <!-- [START fcm_default_icon] -->
+        <activity android:name=".SurvivalGuideActivity"></activity>
+        <activity
+            android:name=".LovedOnesActivity"
+            android:label="@string/title_activity_loved_ones"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".LiveFeedsActivity" /> <!-- [START fcm_default_icon] -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_notification_important_24px" />

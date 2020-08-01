@@ -94,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         CardView ReportButton = findViewById(R.id.reportButton);
         CardView DonateButton = findViewById(R.id.donateButton);
         CardView LiveFeedButton = findViewById(R.id.liveFeedButton);
+        CardView LovedOnesButton = findViewById(R.id.lovedOnesButton);
+        CardView SurvivalButton = findViewById(R.id.SurvivalGuideButton);
         TextView InternetStatus = findViewById(R.id.tvInternetStatus);
         TextView CellularStatus = findViewById(R.id.tvCellularStatus);
 
@@ -155,6 +157,22 @@ public class MainActivity extends AppCompatActivity {
                 Intent goToReportActivity = new Intent(MainActivity.this, ReportCreationActivity.class);
                 goToReportActivity.putExtra("key", "Shruthiiii"); //Optional parameters
                 MainActivity.this.startActivity(goToReportActivity);
+            }
+        });
+
+        LovedOnesButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent goToLoveActivity = new Intent(MainActivity.this, LovedOnesActivity.class);
+                MainActivity.this.startActivity(goToLoveActivity);
+            }
+        });
+
+        SurvivalButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent goToSurvivalActivity = new Intent(MainActivity.this, SurvivalGuideActivity.class);
+                MainActivity.this.startActivity(goToSurvivalActivity);
             }
         });
 
