@@ -258,5 +258,50 @@
 
             </androidx.cardview.widget.CardView>
     </GridLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:rowCount="1"
+        android:columnCount="1"
+        android:alignmentMode="alignMargins"
+        android:columnOrderPreserved="false">
+        <androidx.cardview.widget.CardView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/red"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            app:cardElevation="8dp"
+            app:cardCornerRadius="12dp"
+            android:layout_margin="12dp">
+
+            <RelativeLayout
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <ImageView
+                    android:layout_alignParentLeft="true"
+                    android:src="@drawable/ic_notification_important_24px"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"/>
+                <TextView
+                    android:id="@+id/tvSOS"
+                    android:layout_centerInParent="true"
+                    android:text="SOS!"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:textSize="26sp"
+                    android:layout_height="wrap_content">
+
+                </TextView>
+
+            </RelativeLayout>
+
+        </androidx.cardview.widget.CardView>
+
+    </GridLayout>
 
 </LinearLayout>
