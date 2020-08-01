@@ -1,6 +1,7 @@
 package com.example.disasteralert;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -11,9 +12,13 @@ import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -98,7 +103,7 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
                     public void onLocationResult(LocationResult locationResult) {
                         super.onLocationResult(locationResult);
                         location = locationResult.getLastLocation();
-                        if(flag == false)
+                        if(!flag)
                             updateMap();
                     }
                 },
@@ -110,50 +115,44 @@ public class DisasterActivity extends FragmentActivity implements OnMapReadyCall
         mapFragment.getMapAsync(this);
 
         //Initialise the content
-        final FloatingActionButton floatingActionButtonFlood = findViewById(R.id.check);
-        final FloatingActionButton floatingActionButtonFire = findViewById(R.id.fire);
-        final FloatingActionButton floatingActionButtonInjury = findViewById(R.id.Injury);
-        final FloatingActionButton floatingActionButtonIllness = findViewById(R.id.Illness);
-        final FloatingActionButton floatingActionButtonEarthquake = findViewById(R.id.Earthquake);
+        final Spinner spinner = findViewById(R.id.spinnerMaps);
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.maps, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
 
-        //onClicks
-        floatingActionButtonFlood.setOnClickListener(new View.OnClickListener() {
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onClick(View view) {
-                updateReportFlood();
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if(spinner.getSelectedItem().equals("Flood")){
+                    updateReportFlood();
+                }
+                else if(spinner.getSelectedItem().equals("Fire")){
+                    updateReportFire();
+                }
+                else if(spinner.getSelectedItem().equals("Injury")){
+                    updateReportInjury();
+                }
+                else if(spinner.getSelectedItem().equals("Illness")){
+                    updateReportIllness();
+                }
+                else if(spinner.getSelectedItem().equals("Earthquake")) {
+                    updateReportEarthquake();
+                }
             }
-        });
-        floatingActionButtonFire.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View view) {
-                updateReportFire();
-            }
-        });
-        floatingActionButtonInjury.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateReportInjury();
-            }
-        });
-        floatingActionButtonIllness.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateReportIllness();
-            }
-        });
-        floatingActionButtonEarthquake.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                updateReportEarthquake();
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
             }
         });
 
         updateHeatMap();
-
     }
 
     private void updateReportFlood() {
+
         if(FireOverlay != null)
             FireOverlay.remove();
         if(InjuryOverlay != null)
