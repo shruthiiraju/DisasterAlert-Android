@@ -5,6 +5,8 @@
     <string name="main_report">Make a Report</string>
     <string name="main_donate">Donate</string>
     <string name="main_live_feed">Live Feed</string>
+    <string name="main_loved_ones">Loved Ones</string>
+    <string name="main_info">Survival Guide</string>
     <string name="title_activity_report_creation">File a Report</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">First Fragment</string>
