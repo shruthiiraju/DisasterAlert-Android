@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 
 import android.os.Parcelable;
 import android.util.Log;
@@ -44,6 +45,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -88,11 +90,22 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
         //Initialising layout components
-        FloatingActionButton fab = findViewById(R.id.fab);
-        Button DisasterMapButton = findViewById(R.id.disasterMapButton);
-        Button ReportButton = findViewById(R.id.reportButton);
-        Button DonateButton = findViewById(R.id.donateButton);
-        Button LiveFeedButton = findViewById(R.id.liveFeedButton);
+        CardView DisasterMapButton = findViewById(R.id.disasterMapButton);
+        CardView ReportButton = findViewById(R.id.reportButton);
+        CardView DonateButton = findViewById(R.id.donateButton);
+        CardView LiveFeedButton = findViewById(R.id.liveFeedButton);
+        TextView InternetStatus = findViewById(R.id.tvInternetStatus);
+        TextView CellularStatus = findViewById(R.id.tvCellularStatus);
+
+
+        final ConnectionChecker connectionChecker = new ConnectionChecker();
+        if(!connectionChecker.isMobileAvailable(getApplicationContext())){
+            CellularStatus.setTextColor(getResources().getColor(R.color.red));
+        }
+
+        if(!connectionChecker.isOnline()){
+            InternetStatus.setTextColor(getResources().getColor(R.color.red));
+        }
 
         //Initialising locations
 
@@ -145,13 +158,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with something", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         //OnClick: DonateButton Should take you to DonateActivity(Currently used for testing locations(no longer))
         DonateButton.setOnClickListener(new View.OnClickListener(){
