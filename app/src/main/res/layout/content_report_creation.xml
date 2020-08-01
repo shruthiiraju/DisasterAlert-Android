@@ -50,7 +50,9 @@
                     android:id="@+id/spinnerReportType"
                     android:textSize="28sp"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner_outline"
+                    android:spinnerMode="dropdown">
 
                 </Spinner>
                 <TextView

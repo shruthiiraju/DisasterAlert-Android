@@ -2,9 +2,13 @@ package com.example.disasteralert;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -92,6 +96,7 @@ public class ReportCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("CONNECTION STATUS", Boolean.toString(isNetworkAvailable() && getNetworkState()));
         setContentView(R.layout.activity_report_creation);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -171,10 +176,20 @@ public class ReportCreationActivity extends AppCompatActivity {
                 report.put("type", eventTypes[reportTypeSpinner.getSelectedItemPosition()]);
                 report.put("numberOfPeopleAffected", PEOPLE_AFFECTED_PICKER_CHOICES[peopleAffectedPicker.getValue()]);
                 report.put("description", descriptionEditText.getText().toString());
-//                report.put("layer", ) // TODO: add layer
+                final ConnectionChecker connectionChecker = new ConnectionChecker();
+                if(connectionChecker.isOnline()){
+                    report.put("layer", "first");
+                } else if (!connectionChecker.isOnline() && connectionChecker.isMobileAvailable(getApplicationContext())) {
+                    report.put("layer", "second");
+                }
+                else {
+                    report.put("layer", "third");
+                }
+                Log.e(TAG, report.toString());
 
                 final StorageReference imageRef = storage.getReference()
                         .child(String.valueOf(new Date().getTime()));
+
 
                 if (photoFileUri != null) {
                     imageRef.putFile(photoFileUri)
