@@ -60,6 +60,11 @@
             </intent-filter>
         </service>
 
+        <!-- Status Ping BroadcastReceiver-->
+        <receiver
+            android:name=".StatusPingReceiver"
+            android:exported="false" />
+
         <!-- File Provider for files -->
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -2,6 +2,8 @@ package com.example.disasteralert;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -45,6 +47,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -55,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
     protected static final long FASTEST_UPDATE_INTERVAL = 1 * 1000L;
     protected static final long UPDATE_INTERVAL = 5 * 1000L;
     protected static final long MAX_UPDATE_INTERVAL = 10 * 1000L;
+    protected static final int STATUS_PING_REQUEST_CODE = 1;
+    protected static final long STATUS_PING_INTERVAL = 5 * 60 * 1000;  // 5 minutes
 
-    private static Context mContext;
     public static GetLocations locations;
 
     private FirebaseAuth mAuth;
@@ -244,7 +249,21 @@ public class MainActivity extends AppCompatActivity {
                             Log.e(TAG, "onFailure: ", e);
                         }
                     });
+
+            setUpStatusPing();
         }
+    }
+
+    private void setUpStatusPing() {
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(this, StatusPingReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, STATUS_PING_REQUEST_CODE, intent, 0);
+        alarmManager.setRepeating(
+                AlarmManager.RTC,
+                Calendar.getInstance().getTimeInMillis(),
+                STATUS_PING_INTERVAL,
+                pendingIntent
+        );
     }
 
     @Override
@@ -269,11 +288,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Context getContext() {
-        return mContext;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
+//    public static Context getContext() {
+//        return mContext;
+//    }
+//
+//    public void setContext(Context mContext) {
+//        this.mContext = mContext;
+//    }
 }
