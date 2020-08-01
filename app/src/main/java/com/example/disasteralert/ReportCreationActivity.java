@@ -53,6 +53,7 @@ import android.widget.Toast;
 import java.io.File;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import static com.example.disasteralert.MainActivity.FASTEST_UPDATE_INTERVAL;
@@ -168,7 +169,7 @@ public class ReportCreationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 reportUploadProgressBar.setVisibility(View.VISIBLE);
 
-                final HashMap<String, Object> report = new HashMap<>();
+                final LinkedHashMap<String, Object> report = new LinkedHashMap<>();
                 report.put("byPhone", mAuth.getCurrentUser().getPhoneNumber());
                 //report.put("byEmail", mAuth.getCurrentUser().getEmail());
                 report.put("byUid", mAuth.getCurrentUser().getUid().toString());
@@ -177,7 +178,7 @@ public class ReportCreationActivity extends AppCompatActivity {
                 report.put("type", eventTypes[reportTypeSpinner.getSelectedItemPosition()]);
                 report.put("numberOfPeopleAffected", PEOPLE_AFFECTED_PICKER_CHOICES[peopleAffectedPicker.getValue()]);
                 report.put("description", descriptionEditText.getText().toString());
-                String smsBody = "";
+                String smsBody = "New Report\n";
                 for (Map.Entry mapElement : report.entrySet()) {
                     if((String)mapElement.getKey()!="location") {
                         String key = (String) mapElement.getValue();
