@@ -170,6 +170,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, DisasterActivity.class));
             }
         });
+
+        //OnClick: LiveFeedsButton Should take you to FeedsActivity
+        LiveFeedButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, LiveFeedsActivity.class));
+            }
+        });
     }
 
     private LocationCallback getLocationCallback() {
