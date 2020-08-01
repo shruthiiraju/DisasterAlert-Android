@@ -52,6 +52,11 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+
         //Initialise the content
         number = findViewById(R.id.acc_user);
         code = findViewById(R.id.acc_password);
@@ -229,4 +234,15 @@ public class LoginActivity extends AppCompatActivity {
             CodeSent = s;
         }
     };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        mAuth = FirebaseAuth.getInstance();
+        if (mAuth.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        }
+    }
 }

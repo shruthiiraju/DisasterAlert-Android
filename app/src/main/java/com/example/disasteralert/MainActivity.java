@@ -80,12 +80,12 @@ public class MainActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-            finish();
-        }
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser == null) {
+//            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+//            startActivity(loginIntent);
+//            finish();
+//        }
 
         //Initialising layout components
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -187,6 +187,9 @@ public class MainActivity extends AppCompatActivity {
                         )
                 );
 
+                mAuth = FirebaseAuth.getInstance();
+                db  = FirebaseFirestore.getInstance();
+
                 db.collection("users")
                         .document(mAuth.getCurrentUser().getUid())
                         .update(updateMap)
@@ -216,14 +219,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null) {
-            Toast.makeText(this, "Please sign in", Toast.LENGTH_SHORT)
-                    .show();
-            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
-            startActivity(loginIntent);
-            finish();
-        } else {
+//        FirebaseUser currentUser = mAuth.getCurrentUser();
+//        if(currentUser == null) {
+//            Toast.makeText(this, "Please sign in", Toast.LENGTH_SHORT)
+//                    .show();
+//            Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
+//            startActivity(loginIntent);
+//            finish();
+//        } else {
             mAuth = FirebaseAuth.getInstance();
             db = FirebaseFirestore.getInstance();
 
@@ -251,7 +254,7 @@ public class MainActivity extends AppCompatActivity {
                     });
 
             setUpStatusPing();
-        }
+//        }
     }
 
     private void setUpStatusPing() {
