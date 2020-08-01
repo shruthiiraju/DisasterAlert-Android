@@ -2,6 +2,8 @@ package com.example.disasteralert;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -13,12 +15,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.GeoPoint;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -42,6 +47,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
     protected static final long FASTEST_UPDATE_INTERVAL = 1 * 1000L;
     protected static final long UPDATE_INTERVAL = 5 * 1000L;
     protected static final long MAX_UPDATE_INTERVAL = 10 * 1000L;
+    protected static final int STATUS_PING_REQUEST_CODE = 1;
+    protected static final long STATUS_PING_INTERVAL = 5 * 60 * 1000;  // 5 minutes
 
-    private static Context mContext;
     public static GetLocations locations;
 
     private FirebaseAuth mAuth;
@@ -76,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
         if(currentUser == null) {
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);
+            finish();
         }
 
         //Initialising layout components
@@ -213,7 +222,48 @@ public class MainActivity extends AppCompatActivity {
                     .show();
             Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(loginIntent);
+            finish();
+        } else {
+            mAuth = FirebaseAuth.getInstance();
+            db = FirebaseFirestore.getInstance();
+
+            FirebaseInstanceId.getInstance().getInstanceId()
+                    .addOnSuccessListener(new OnSuccessListener<InstanceIdResult>() {
+                        @Override
+                        public void onSuccess(InstanceIdResult instanceIdResult) {
+                            db.collection("users")
+                                    .document(mAuth.getCurrentUser().getUid())
+                                    .update("token", instanceIdResult.getToken())
+
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.e(TAG, "onFailure: ", e);
+                                        }
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: ", e);
+                        }
+                    });
+
+            setUpStatusPing();
         }
+    }
+
+    private void setUpStatusPing() {
+        AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
+        Intent intent = new Intent(this, StatusPingReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, STATUS_PING_REQUEST_CODE, intent, 0);
+        alarmManager.setRepeating(
+                AlarmManager.RTC,
+                Calendar.getInstance().getTimeInMillis(),
+                STATUS_PING_INTERVAL,
+                pendingIntent
+        );
     }
 
     @Override
@@ -238,11 +288,11 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static Context getContext() {
-        return mContext;
-    }
-
-    public void setContext(Context mContext) {
-        this.mContext = mContext;
-    }
+//    public static Context getContext() {
+//        return mContext;
+//    }
+//
+//    public void setContext(Context mContext) {
+//        this.mContext = mContext;
+//    }
 }

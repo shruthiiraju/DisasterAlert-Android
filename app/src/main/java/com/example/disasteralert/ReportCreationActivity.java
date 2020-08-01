@@ -176,58 +176,68 @@ public class ReportCreationActivity extends AppCompatActivity {
                 final StorageReference imageRef = storage.getReference()
                         .child(String.valueOf(new Date().getTime()));
 
-                imageRef.putFile(photoFileUri)
-                        .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-                            @Override
-                            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-                                if (!task.isSuccessful()) {
-                                    Log.e(TAG, "then: ", task.getException());
-                                    Toast.makeText(ReportCreationActivity.this, "Couldn't upload image", Toast.LENGTH_SHORT).show();
-                                    throw task.getException();
+                if (photoFileUri != null) {
+                    imageRef.putFile(photoFileUri)
+                            .continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        Log.e(TAG, "then: ", task.getException());
+                                        Toast.makeText(ReportCreationActivity.this, "Couldn't upload image", Toast.LENGTH_SHORT).show();
+                                        throw task.getException();
+                                    }
+
+                                    return imageRef.getDownloadUrl();
                                 }
+                            })
+                            .addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    report.put("imageUrl", uri.toString());
 
-                                return imageRef.getDownloadUrl();
-                            }
-                        })
-                        .addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                report.put("imageUrl", uri.toString());
-
-                                db.collection("reports")
-                                        .document(String.valueOf(report.get("time")))
-
-                                        .set(report)
-
-                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                            @Override
-                                            public void onSuccess(Void aVoid) {
-                                                reportUploadProgressBar.setVisibility(View.GONE);
-                                                Toast.makeText(ReportCreationActivity.this, "Report Created", Toast.LENGTH_SHORT).show();
-                                                if (!photoFile.delete()) {
-                                                    Log.e(TAG, "onSuccess: FILE NOT DELETED");
-                                                }
-                                                finish();
-                                            }
-                                        })
-                                        .addOnFailureListener(new OnFailureListener() {
-                                            @Override
-                                            public void onFailure(@NonNull Exception e) {
-                                                Log.e(TAG, "onFailure: ", e);
-                                                reportUploadProgressBar.setVisibility(View.GONE);
-                                            }
-                                        });
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "onFailure: ", e);
-                                reportUploadProgressBar.setVisibility(View.GONE);
-                            }
-                        });
+                                    uploadReport(report);
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "onFailure: ", e);
+                                    reportUploadProgressBar.setVisibility(View.GONE);
+                                }
+                            });
+                } else {
+                    uploadReport(report);
+                }
             }
         });
+    }
+
+    private void uploadReport(HashMap<String, Object> report) {
+        db.collection("reports")
+                .document(String.valueOf(report.get("time")))
+
+                .set(report)
+
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        reportUploadProgressBar.setVisibility(View.GONE);
+                        Toast.makeText(ReportCreationActivity.this, "Report Created", Toast.LENGTH_SHORT).show();
+                        if (photoFile != null) {
+                            if (!photoFile.delete()) {
+                                Log.e(TAG, "onSuccess: FILE NOT DELETED");
+                            }
+                        }
+                        finish();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: ", e);
+                        reportUploadProgressBar.setVisibility(View.GONE);
+                    }
+                });
     }
 
     private void dispatchTakePictureIntent() {
@@ -258,9 +268,11 @@ public class ReportCreationActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
 
-        if (photoFile.exists()) {
-            if (!photoFile.delete()) {
-                Log.e(TAG, "onStop: FILE NOT DELETED");
+        if (photoFile != null) {
+            if (photoFile.exists()) {
+                if (!photoFile.delete()) {
+                    Log.e(TAG, "onStop: FILE NOT DELETED");
+                }
             }
         }
     }
