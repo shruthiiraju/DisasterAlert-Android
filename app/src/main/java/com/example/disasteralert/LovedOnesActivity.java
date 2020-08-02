@@ -68,11 +68,11 @@ public class LovedOnesActivity extends AppCompatActivity {
         getContacts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkPermission(Manifest.permission.READ_CONTACTS, CONTACTS_PERMISSION_CODE);
+
                 getContact();
             }
         });
-
+        checkPermission(Manifest.permission.READ_CONTACTS, CONTACTS_PERMISSION_CODE);
         getDataBaseContacts();
     }
 
