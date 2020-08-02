@@ -3,53 +3,76 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bgappblank"
+    android:padding="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical">
 
-    <LinearLayout
+    <RelativeLayout
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Choose Method of Payment:"
-            android:padding="5dp"
-            android:textColor="#000"
-            android:textStyle="bold"
-            android:textSize="18dp"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center">
-
-        <ImageView
+            android:id="@+id/tvDonateHeading"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/main_donate"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white">
+
+        </TextView>
+        <TextView
+            android:layout_below="@id/tvDonateHeading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="Make a donation to support relief efforts around the country.">
+        </TextView>
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="10dp"
+        app:cardElevation="8dp"
+        app:cardCornerRadius="5dp"
+        android:layout_margin="5dp"
+        android:layout_below="@id/event_report_heading"
+        android:layout_above="@+id/layout_bottom"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_marginTop="24dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
             android:src="@drawable/upi"
             android:id="@+id/draw_upi"/>
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Pay by UPI"
-            android:id="@+id/upi" />
-
-    </LinearLayout>
     <LinearLayout
+        android:layout_below="@id/draw_upi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:id="@+id/upi_donations_layout"
-        android:visibility="gone">
+        android:layout_margin="10dp"
+        android:id="@+id/upi_donations_layout">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Enter Details"
+            android:textStyle="bold"
+            android:text="Enter Details:"
             android:textColor="#000"
             android:layout_margin="10dp"
             android:textSize="20dp"
@@ -86,9 +109,14 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="make payment"
+            android:textStyle="bold"
+            android:text="Make Payment"
+            android:background="@drawable/rounded_button"
+            android:textColor="@android:color/white"
             android:layout_margin="10dp"
             android:id="@+id/make_donation"/>
     </LinearLayout>
+    </RelativeLayout>
+    </androidx.cardview.widget.CardView>
 
 </LinearLayout>

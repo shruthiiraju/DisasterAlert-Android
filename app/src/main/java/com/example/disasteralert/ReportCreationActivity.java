@@ -74,7 +74,7 @@ public class ReportCreationActivity extends AppCompatActivity {
     private static final String TAG = "DisasterAlert";
 
     private static final String[] PEOPLE_AFFECTED_PICKER_CHOICES = new String[]{"None", "1", "5", "10", "<50", "50+"};
-    private static final String[] eventTypes = { "Flood", "Fire", "Injury", "Illness", "Earthquake" };
+    private static final String[] eventTypes = { "Flood", "Fire", "Injury", "Illness", "Earthquake","Relief","Critical" };
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private NumberPicker peopleAffectedPicker;
@@ -100,8 +100,6 @@ public class ReportCreationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_report_creation);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -110,7 +108,6 @@ public class ReportCreationActivity extends AppCompatActivity {
         //Initialising layout components
         reportTypeSpinner = (Spinner) findViewById(R.id.spinnerReportType);
         peopleAffectedPicker = findViewById(R.id.picker_people_affected);
-        FloatingActionButton fab = findViewById(R.id.fab);
         addPictureButton = findViewById(R.id.button_add_picture);
         reportImageView = findViewById(R.id.image_view_report);
         submitReportButton = findViewById(R.id.button_submit_report);
@@ -144,14 +141,6 @@ public class ReportCreationActivity extends AppCompatActivity {
         peopleAffectedPicker.setValue(1);
         peopleAffectedPicker.setWrapSelectorWheel(false);
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
         //Setting Report Type spinner dropdown values
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, eventTypes);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -178,6 +167,7 @@ public class ReportCreationActivity extends AppCompatActivity {
                 report.put("type", eventTypes[reportTypeSpinner.getSelectedItemPosition()]);
                 report.put("numberOfPeopleAffected", PEOPLE_AFFECTED_PICKER_CHOICES[peopleAffectedPicker.getValue()]);
                 report.put("description", descriptionEditText.getText().toString());
+                report.put("isVerified", "false");
                 String smsBody = "New Report from App\n";
                 for (Map.Entry mapElement : report.entrySet()) {
                     if((String)mapElement.getKey()!="location") {
@@ -193,6 +183,7 @@ public class ReportCreationActivity extends AppCompatActivity {
                 } else if (!connectionChecker.isOnline() && connectionChecker.isMobileAvailable(getApplicationContext())) {
                     report.put("layer", "second");
                     sendSMS(smsBody);
+                    return;
                 }
                 else {
                     report.put("layer", "third");

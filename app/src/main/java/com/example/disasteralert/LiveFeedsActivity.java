@@ -18,13 +18,14 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.google.longrunning.GetOperationRequest;
 
 import java.net.URL;
+import java.sql.Time;
 import java.util.ArrayList;
 
 public class LiveFeedsActivity extends AppCompatActivity {
 
     private static final String TAG="LiveFeedsActivity";
 
-    private ArrayList<String> Type, Desc;
+    private ArrayList<String> Type, Desc, Timestamp;
     private ArrayList<String> imagesUrls;
     private ArrayList<String> colour;
     private Context mContext;
@@ -37,6 +38,7 @@ public class LiveFeedsActivity extends AppCompatActivity {
 
         //initialising lists
         Type = new ArrayList<>();
+        Timestamp = new ArrayList<>();
         Desc = new ArrayList<>();
         imagesUrls = new ArrayList<>();
         colour = new ArrayList<>();
@@ -52,6 +54,7 @@ public class LiveFeedsActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot documentSnapshot: task.getResult()){
                                 Type.add((String)documentSnapshot.get("type"));
                                 Desc.add((String)documentSnapshot.get("description"));
+                                Timestamp.add((String)documentSnapshot.get("time"));
                                 GeoPoint point;
                                 try {
                                     point = (GeoPoint) documentSnapshot.get("location");
@@ -98,9 +101,12 @@ public class LiveFeedsActivity extends AppCompatActivity {
     private void initRecylerView(){
         Log.d(TAG, "initRecyclerView: prep recycler view");
         RecyclerView recyclerView = findViewById(R.id.feedsRecyclerView);
-        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, Type, Desc, imagesUrls,colour);
+        RecyclerViewAdapter adapter = new RecyclerViewAdapter(this, Type, Timestamp, Desc, imagesUrls,colour);
         recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setReverseLayout(true);
+        linearLayoutManager.setStackFromEnd(true);
+        recyclerView.setLayoutManager(linearLayoutManager);
     }
 
 }

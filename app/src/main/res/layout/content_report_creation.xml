@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -8,6 +8,15 @@
     android:padding="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+    <RelativeLayout
+        android:id="@+id/event_report_heading"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/text_static_event_report"
         android:layout_width="match_parent"
@@ -15,10 +24,19 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true"
         android:textSize="30sp"
-        android:textColor="#000"
+        android:textColor="@android:color/white"
         android:textStyle="bold"
         android:text="Event Report"
         android:layout_alignParentLeft="true" />
+        <TextView
+            android:layout_below="@id/text_static_event_report"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="@android:color/white"
+            android:text="Tell us what's happening around you.">
+        </TextView>
+    </RelativeLayout>
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
@@ -26,40 +44,44 @@
         android:elevation="10dp"
         app:cardCornerRadius="5dp"
         android:layout_margin="5dp"
-        android:layout_below="@id/text_static_event_report"
+        android:layout_below="@id/event_report_heading"
         android:layout_above="@+id/layout_bottom"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="30dp">
-        <ScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="10dp">
 
             <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="14dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
                 android:orientation="vertical">
+
                 <TextView
+                    android:layout_marginTop="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     android:text="Type of Event:">
                 </TextView>
                 <Spinner
                     android:id="@+id/spinnerReportType"
-                    android:textSize="28sp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:textSize="32sp"
+                    android:layout_width="140dp"
+                    android:layout_height="35dp"
                     android:background="@drawable/spinner_outline"
                     android:spinnerMode="dropdown">
 
                 </Spinner>
                 <TextView
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="30dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
                     android:text="Number of people affected:">
                 </TextView>
                 <NumberPicker
@@ -69,39 +91,45 @@
                     android:inputType="number" />
 
                 <TextView
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="18dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="18sp"
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
                     android:text="Description:">
                 </TextView>
                 <EditText
                     android:id="@+id/textReportDesc"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="20dp"
                     android:hint="Enter description..."
                     android:inputType="text|textMultiLine"
                     android:gravity="top"/>
 
                 <Button
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="18dp"
                     android:id="@+id/button_add_picture"
                     android:layout_width="wrap_content"
+                    android:padding="12dp"
+                    android:textStyle="bold"
+                    android:background="#d3d3d3"
+                    android:textColor="@android:color/black"
                     android:layout_height="wrap_content"
                     android:textAllCaps="false"
-                    android:layout_margin="20dp"
-                    android:text="Add a Photo" />
+                    android:drawableLeft="@drawable/ic_camera_enhance_24px"
+                    android:text=" Add a Photo" />
 
                 <ImageView
                     android:id="@+id/image_view_report"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"
                     android:padding="10dp"
+                    android:scaleType="fitCenter"
                     android:src="@mipmap/ic_launcher"
-                    android:scaleType="fitXY" />
+                    android:visibility="gone" />
             </LinearLayout>
-        </ScrollView>
     </androidx.cardview.widget.CardView>
 
     <LinearLayout
@@ -112,17 +140,15 @@
         android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="2dp"
-            android:layout_margin="5dp"
-            android:background="#777" />
-
         <Button
             android:id="@+id/button_submit_report"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:background="@drawable/rounded_button"
             android:text="@string/getting_location"
             android:enabled="false"
             android:textAllCaps="false" />
@@ -133,4 +159,4 @@
             android:layout_height="wrap_content"
             android:visibility="gone" />
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

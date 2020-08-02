@@ -33,16 +33,6 @@ public class DonationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation);
 
-        //Initialising layout components
-        Button upi = findViewById(R.id.upi);
-
-        //Set OnClick listeners
-        upi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                makeUPIPayments();
-            }
-        });
     }
 
     private void makeUPIPayments() {
