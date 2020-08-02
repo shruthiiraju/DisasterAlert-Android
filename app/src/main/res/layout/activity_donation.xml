@@ -89,9 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="UPI id"
-            android:text="manjual@okicici"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
             android:layout_margin="10dp"
             android:id="@+id/upi_id_donation"/>
 

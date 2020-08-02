@@ -1,5 +1,6 @@
 package com.example.disasteralert;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
@@ -19,12 +20,21 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class DonationActivity extends AppCompatActivity {
 
     final String TAG = "DonationActivity";
     final int UPI_PAYMENT = 0;
+    private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     EditText amt, upi, name, note;
     Button send;
 
@@ -32,6 +42,9 @@ public class DonationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation);
+
+        mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         final Button makePayment = findViewById(R.id.make_donation);
 
@@ -156,6 +169,25 @@ public class DonationActivity extends AppCompatActivity {
                 //Code to handle successful transaction here.
                 Toast.makeText(DonationActivity.this, "Transaction successful.", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "responseStr: "+approvalRefNo);
+
+                //update to database
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("NDRF", amt.getText().toString());
+                map.put("FundType", "Mobile Donation");
+                map.put("byPhone", mAuth.getCurrentUser().getPhoneNumber());
+                map.put("byUid", mAuth.getCurrentUser().getUid());
+
+                db.collection("funds")
+                        .add(map)
+                        .addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentReference> task) {
+                                if(task.isSuccessful()){
+                                    Log.d(TAG, "onComplete: Database was updated");
+                                }
+                            }
+                        });
+
             }
             else if("Payment cancelled by user.".equals(paymentCancel)) {
                 Toast.makeText(DonationActivity.this, "Payment cancelled by user.", Toast.LENGTH_SHORT).show();
