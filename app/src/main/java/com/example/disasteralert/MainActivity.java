@@ -40,7 +40,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.os.Parcelable;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
@@ -104,8 +106,10 @@ public class MainActivity extends AppCompatActivity {
         CardView LiveFeedButton = findViewById(R.id.liveFeedButton);
         CardView LovedOnesButton = findViewById(R.id.lovedOnesButton);
         CardView SurvivalButton = findViewById(R.id.SurvivalGuideButton);
-        TextView InternetStatus = findViewById(R.id.tvInternetStatus);
-        TextView CellularStatus = findViewById(R.id.tvCellularStatus);
+        final TextView InternetStatus = findViewById(R.id.tvInternetStatus);
+        final TextView CellularStatus = findViewById(R.id.tvCellularStatus);
+
+        final SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.swiperefresh);
 
 
         final ConnectionChecker connectionChecker = new ConnectionChecker();
@@ -157,6 +161,38 @@ public class MainActivity extends AppCompatActivity {
 //        setContext(this);
 //        locations = new GetLocations();
 //        locations.getLocation();
+        mySwipeRefreshLayout.setOnRefreshListener(
+                new SwipeRefreshLayout.OnRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+
+                        // This method performs the actual data-refresh operation.
+                        // The method calls setRefreshing(false) when it's finished.
+                        final Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(!connectionChecker.isMobileAvailable(getApplicationContext())){
+                                    CellularStatus.setTextColor(getResources().getColor(R.color.red));
+                                } else {
+                                    CellularStatus.setTextColor(getResources().getColor(R.color.green));
+                                }
+
+                                if(!connectionChecker.isOnline()){
+                                    InternetStatus.setTextColor(getResources().getColor(R.color.red));
+                                } else {
+                                    InternetStatus.setTextColor(getResources().getColor(R.color.green));
+                                }
+                                mySwipeRefreshLayout.setRefreshing(false);
+                            }
+                        }, 800);
+
+
+
+                    }
+                }
+        );
 
         //OnClick: ReportButton should take you to ReportCreationActivity.
         ReportButton.setOnClickListener(new View.OnClickListener(){
@@ -373,6 +409,8 @@ public class MainActivity extends AppCompatActivity {
             setUpStatusPing();
 //        }
     }
+
+
 
     private void setUpStatusPing() {
         AlarmManager alarmManager = (AlarmManager) this.getSystemService(ALARM_SERVICE);
