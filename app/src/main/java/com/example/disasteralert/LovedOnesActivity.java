@@ -87,15 +87,20 @@ public class LovedOnesActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if(task.isSuccessful()){
                                 DocumentSnapshot document = task.getResult();
-                                ArrayList<String> nums = (ArrayList<String>) document.get("lovedOnes");
-                                for(String num : nums){
-                                    num = num.replaceAll("\\s", "");
-                                    numbers.add(num);
-                                    names.add(num);
-                                    images.add(num);
-                                    Log.d(TAG, "onComplete: " + num);
+                                try {
+                                    ArrayList<String> nums = (ArrayList<String>) document.get("lovedOnes");
+                                    for (String num : nums) {
+                                        num = num.replaceAll("\\s", "");
+                                        numbers.add(num);
+                                        names.add(num);
+                                        images.add(num);
+                                        Log.d(TAG, "onComplete: " + num);
+                                    }
+                                    getContactFromNumber();
                                 }
-                                getContactFromNumber();
+                                catch (Exception e){
+                                    Toast.makeText(LovedOnesActivity.this, "Add contacts", Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }
                     });
@@ -244,9 +249,13 @@ public class LovedOnesActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot document: task.getResult()){
                                 userNumbers.add("+91" + document.get("number"));
                             }
+                            addToDataBaseContd();
                         }
                     }
                 });
+    }
+
+    private void addToDataBaseContd() {
         if(userNumbers.contains(numbers.get(numbers.size()-1))){
             HashMap<String, Object> map = new HashMap<>();
             map.put("lovedOnes", numbers);
