@@ -238,7 +238,8 @@ public class MainActivity extends AppCompatActivity {
         if(connectionChecker.isOnline()) {
             HashMap<String, Object> map = new HashMap<>();
             map.put("time", System.currentTimeMillis() / 1000L);
-            map.put("number", mAuth.getCurrentUser().getPhoneNumber());
+            map.put("byPhone", mAuth.getCurrentUser().getPhoneNumber());
+            map.put("byUid", mAuth.getCurrentUser().getUid());
             if (staticlocation == null) {
                 map.put("location", "null");
             } else {
@@ -267,8 +268,8 @@ public class MainActivity extends AppCompatActivity {
                 smsbody += "null";
             }
             else{
-                GeoPoint geoPoint = new GeoPoint(staticlocation.getLatitude(), staticlocation.getLongitude());
-                smsbody += geoPoint.toString();
+                smsbody += staticlocation.getLatitude() + ",";
+                smsbody += staticlocation.getLongitude();
             }
             sendSMS(smsbody);
         }

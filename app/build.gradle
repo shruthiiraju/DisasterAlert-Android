@@ -55,4 +55,7 @@ dependencies {
 
     //Pretty time
     implementation 'org.ocpsoft.prettytime:prettytime:4.0.4.Final'
+
+    //CircleImage
+    implementation 'de.hdodenhof:circleimageview:3.0.1'
 }
