@@ -1,5 +1,6 @@
 package com.example.disasteralert;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -14,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,8 @@ import static com.example.disasteralert.App.CHANNEL_4_ID;
 public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
 
     private static final String TAG = "MyFirebaseMsgService";
+    private static final int SAFE_BUTTON_REQUEST_CODE = 1234;
+    private static final int NOT_SAFE_BUTTON_REQUEST_CODE = 12345;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -74,19 +78,23 @@ public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
 
             notificationManager = NotificationManagerCompat.from(this);
 
-            switch (priority) {
-                case "1":
-                    buildNotification(CHANNEL_1_ID, map);
-                    break;
-                case "2":
-                    buildNotification(CHANNEL_2_ID, map);
-                    break;
-                case "3":
-                    buildNotification(CHANNEL_3_ID, map);
-                    break;
-                default:
-                    buildNotification(CHANNEL_4_ID, map);
-                    break;
+            if (map.containsKey("isSevere") && map.get("isSevere").equals("True")) {
+                buildSevereNotification(CHANNEL_3_ID, map);
+            } else {
+                switch (priority) {
+                    case "1":
+                        buildNotification(CHANNEL_1_ID, map);
+                        break;
+                    case "2":
+                        buildNotification(CHANNEL_2_ID, map);
+                        break;
+                    case "3":
+                        buildNotification(CHANNEL_3_ID, map);
+                        break;
+                    default:
+                        buildNotification(CHANNEL_4_ID, map);
+                        break;
+                }
             }
         }
 
@@ -112,6 +120,40 @@ public class DisasterFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentText(map.get("body"));
 
         notificationManager.notify(notification_id, notification.build());
+    }
+
+    private void buildSevereNotification(String CHANNEL_ID, Map<String, String> map) {
+        int notification_id = Integer.parseInt(map.get("notification_id").substring(map.get("notification_id").length() - 9));
+
+        RemoteViews expandedNotificationView = new RemoteViews(getPackageName(), R.layout.layout_severe_notification_expanded);
+        RemoteViews collapsedNotificationView = new RemoteViews(getPackageName(), R.layout.layout_severe_notification_collapsed);
+
+        collapsedNotificationView.setTextViewText(R.id.text_notification_report_title, map.get("title"));
+        collapsedNotificationView.setTextViewText(R.id.text_notification_report_description, map.get("body"));
+
+        expandedNotificationView.setTextViewText(R.id.text_notification_report_title, map.get("title"));
+        expandedNotificationView.setTextViewText(R.id.text_notification_report_description, map.get("body"));
+
+        Intent safeButtonClickIntent = new Intent(this, LovedOnesActivity.class);
+        safeButtonClickIntent.putExtra("isSafe", true);
+        safeButtonClickIntent.putExtra("notificationId", notification_id);
+        PendingIntent safeButtonClickPendingIntent = PendingIntent.getActivity(this, SAFE_BUTTON_REQUEST_CODE, safeButtonClickIntent, 0);
+        Intent notSafeButtonClickIntent = new Intent(this, LovedOnesActivity.class);
+        notSafeButtonClickIntent.putExtra("isSafe", false);
+        notSafeButtonClickIntent.putExtra("notificationId", notification_id);
+        PendingIntent notSafeButtonClickPendingIntent = PendingIntent.getActivity(this, NOT_SAFE_BUTTON_REQUEST_CODE, notSafeButtonClickIntent, 0);
+
+        expandedNotificationView.setOnClickPendingIntent(R.id.button_notification_safe, safeButtonClickPendingIntent);
+        expandedNotificationView.setOnClickPendingIntent(R.id.button_notification_not_safe, notSafeButtonClickPendingIntent);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_public_24px)
+                .setContentTitle(map.get("title"))
+                .setContentText(map.get("body"))
+                .setCustomBigContentView(expandedNotificationView)
+                .build();
+
+        notificationManager.notify(notification_id, notification);
     }
 
     // [START on_new_token]

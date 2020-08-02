@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp">
+
+    <TextView
+        android:id="@+id/text_static_disaster_alert"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Disaster Alert"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFF"
+        android:padding="5dp"
+        android:textAlignment="center"
+        android:layout_alignParentTop="true"
+        android:background="@color/red"
+        android:gravity="center_horizontal" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/red"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/text_static_disaster_alert"
+        android:alpha="0.2" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/text_static_disaster_alert">
+
+        <ImageView
+            android:id="@+id/button_notification_not_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_not_safe_50"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentStart="true"
+            android:background="@drawable/not_safe_background"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_alignParentLeft="true" />
+
+        <TextView
+            android:id="@+id/text_static_notification_not_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I need help"
+            android:layout_alignStart="@+id/button_notification_not_safe"
+            android:textColor="#FFF"
+            android:layout_below="@id/button_notification_not_safe"
+            android:layout_alignLeft="@+id/button_notification_not_safe" />
+
+        <TextView
+            android:id="@+id/text_notification_report_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="#FFF"
+            android:layout_marginTop="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:textSize="18sp"
+            android:layout_toRightOf="@+id/button_notification_not_safe"
+            android:layout_toLeftOf="@+id/button_notification_safe"
+            android:layout_toStartOf="@+id/button_notification_safe"
+            android:layout_toEndOf="@+id/button_notification_not_safe"
+            android:gravity="center_horizontal" />
+
+        <TextView
+            android:id="@+id/text_notification_report_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textAlignment="center"
+            android:textColor="#FFF"
+            android:layout_marginVertical="20dp"
+            android:layout_alignParentBottom="true"
+            android:textSize="15sp"
+            android:layout_below="@id/text_notification_report_title"
+            android:layout_toRightOf="@+id/button_notification_not_safe"
+            android:layout_toLeftOf="@+id/button_notification_safe"
+            android:layout_toStartOf="@+id/button_notification_safe"
+            android:layout_toEndOf="@+id/button_notification_not_safe"
+            android:gravity="center_horizontal" />
+
+        <ImageView
+            android:id="@+id/button_notification_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_safe_50"
+            android:layout_margin="30dp"
+            android:layout_gravity="center_vertical"
+            android:layout_alignParentEnd="true"
+            android:background="@drawable/safe_background"
+            android:scaleX="1.5"
+            android:scaleY="1.5"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/text_static_notification_safe"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'm safe"
+            android:textColor="#FFF"
+            android:layout_below="@id/button_notification_safe"
+            android:layout_alignStart="@id/button_notification_safe"
+            android:layout_alignLeft="@id/button_notification_safe" />
+    </RelativeLayout>
+</RelativeLayout>
