@@ -19,7 +19,7 @@
             android:id="@+id/cardLayout">
 
             <TextView
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/itemText"
                 android:text="Heading"
@@ -39,7 +39,7 @@
 
             <TextView
                 android:layout_below="@id/itemDesc"
-                android:layout_width="160dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
                 android:id="@+id/itemTimestamp"
