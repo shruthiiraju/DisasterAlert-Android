@@ -44,7 +44,7 @@ public class LovedOnesActivity extends AppCompatActivity {
     private final int REQUEST_CODE=99;
     private final int CONTACTS_PERMISSION_CODE = 10;
     private final String TAG = "LovedOnesActivity";
-    private ArrayList<String> numbers, names, images, userNumbers;
+    private ArrayList<String> numbers, names, images, safes, userNumbers, userSafes;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private boolean flag = false;
@@ -60,6 +60,8 @@ public class LovedOnesActivity extends AppCompatActivity {
         names = new ArrayList<>();
         images = new ArrayList<>();
         userNumbers = new ArrayList<>();
+        safes = new ArrayList<>();
+        userSafes = new ArrayList<>();
 
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -121,7 +123,7 @@ public class LovedOnesActivity extends AppCompatActivity {
             );
 
             // Loop through the contacts
-            while (contacts.moveToNext()) {
+            outer: while (contacts.moveToNext()) {
             // Get the current contact name
                 String name = contacts.getString(
                 contacts.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY));
@@ -138,12 +140,13 @@ public class LovedOnesActivity extends AppCompatActivity {
                 if(numbers.contains(phoneNumber)){
                     Log.d(TAG, "getContactFromNumber: " + phoneNumber + " " + name + " " + image);
                     int i = numbers.indexOf(phoneNumber);
-                    names.add(i, name);
-                    images.add(i, image);
+                    names.set(i, name);
+                    images.set(i, image);
                 }
             }
             contacts.close();
-            loadRecyclerView();
+            addToDataBase(false);
+
         }
     }
 
@@ -166,10 +169,8 @@ public class LovedOnesActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            @NonNull String[] permissions,
-                                           @NonNull int[] grantResults)
-    {
-        super
-                .onRequestPermissionsResult(requestCode,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode,
                         permissions,
                         grantResults);
 
@@ -228,7 +229,7 @@ public class LovedOnesActivity extends AppCompatActivity {
                             if(flag == false){
                                 Toast.makeText(LovedOnesActivity.this, "Number is already added", Toast.LENGTH_SHORT).show();
                             }
-                            addToDataBase();
+                            addToDataBase(true);
                         }
                     }
                     break;
@@ -239,7 +240,7 @@ public class LovedOnesActivity extends AppCompatActivity {
         }
     }
 
-    private void addToDataBase() {
+    private void addToDataBase(final boolean stage) {
         db.collection("users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -248,8 +249,17 @@ public class LovedOnesActivity extends AppCompatActivity {
                         if(task.isSuccessful()){
                             for(QueryDocumentSnapshot document: task.getResult()){
                                 userNumbers.add("+91" + document.get("number"));
+                                try{
+                                    userSafes.add((String)document.get("safe"));
+                                }
+                                catch (Exception e) {
+                                    userSafes.add("true");
+                                }
                             }
-                            addToDataBaseContd();
+                            if(stage)
+                                addToDataBaseContd();
+                            else
+                                loadRecyclerView();
                         }
                     }
                 });
@@ -278,9 +288,10 @@ public class LovedOnesActivity extends AppCompatActivity {
     }
 
     private void loadRecyclerView() {
+        getsafes();
         Log.d(TAG, "loadRecyclerView: prep recycler view");
         RecyclerView recyclerView = findViewById(R.id.lovedRecycler);
-        RecyclerViewAdapterLovedOnesPage adapterLovedOnesPage = new RecyclerViewAdapterLovedOnesPage(this, numbers, names, images);
+        RecyclerViewAdapterLovedOnesPage adapterLovedOnesPage = new RecyclerViewAdapterLovedOnesPage(this, numbers, names, images, safes);
         recyclerView.setAdapter(adapterLovedOnesPage);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setReverseLayout(true);
@@ -289,5 +300,13 @@ public class LovedOnesActivity extends AppCompatActivity {
 //        numbers.clear();
 //        names.clear();
 //        images.clear();
+    }
+
+    private void getsafes() {
+        for(String num: numbers){
+            int i = userNumbers.indexOf(num);
+            safes.add(userSafes.get(i));
+        }
+        Log.d(TAG, "getsafes: " + safes);
     }
 }

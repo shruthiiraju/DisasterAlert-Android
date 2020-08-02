@@ -24,14 +24,16 @@ public class RecyclerViewAdapterLovedOnesPage extends RecyclerView.Adapter<Recyc
 
     private static final String TAG = "RecyclerViewAdapterLovedOnesPage";
 
-    private ArrayList<String> numbers, names, images;
+    private ArrayList<String> numbers, names, images, safes;
     private Context mContext;
 
-    RecyclerViewAdapterLovedOnesPage(Context mContext, ArrayList<String> numbers, ArrayList<String> names, ArrayList<String> images){
+    RecyclerViewAdapterLovedOnesPage(Context mContext, ArrayList<String> numbers, ArrayList<String> names, ArrayList<String> images,
+                                     ArrayList<String> safes){
         this.mContext = mContext;
         this.numbers = numbers;
         this.names = names;
         this.images = images;
+        this.safes = safes;
     }
 
     @NonNull
@@ -54,6 +56,11 @@ public class RecyclerViewAdapterLovedOnesPage extends RecyclerView.Adapter<Recyc
                     .load(images.get(position))
                     .into(holder.image);
         }
+        if(safes.get(position) == null || safes.get(position).equals("true")){
+            holder.parent_layout.setBackgroundColor(Color.parseColor("#43A047"));
+        }
+        else
+            holder.parent_layout.setBackgroundColor(Color.parseColor("#D84315"));
     }
 
     @Override
