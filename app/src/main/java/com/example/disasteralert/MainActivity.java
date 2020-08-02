@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity {
         final ConnectionChecker connectionChecker = new ConnectionChecker();
         if(connectionChecker.isOnline()) {
             HashMap<String, Object> map = new HashMap<>();
-            map.put("time", System.currentTimeMillis() / 1000L);
+            map.put("time", String.valueOf(System.currentTimeMillis() / 1000L));
             map.put("byPhone", mAuth.getCurrentUser().getPhoneNumber());
             map.put("byUid", mAuth.getCurrentUser().getUid());
             if (staticlocation == null) {
