@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         CardView SurvivalButton = findViewById(R.id.SurvivalGuideButton);
         final TextView InternetStatus = findViewById(R.id.tvInternetStatus);
         final TextView CellularStatus = findViewById(R.id.tvCellularStatus);
+        TextView sos = findViewById(R.id.tvSOS);
 
         final SwipeRefreshLayout mySwipeRefreshLayout = findViewById(R.id.swiperefresh);
 
@@ -244,6 +245,22 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 startActivity(new Intent(MainActivity.this, LiveFeedsActivity.class));
+            }
+        });
+
+
+        sos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Vibrator v = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+                // Vibrate for 500 milliseconds
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
+                } else {
+                    //deprecated in API 26
+                    v.vibrate(500);
+                }
+                updateSOSReport();
             }
         });
 
