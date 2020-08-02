@@ -300,6 +300,8 @@ public class ReportCreationActivity extends AppCompatActivity {
             smsManager.sendTextMessage("+12059272598", null, body, null, null);
             Toast.makeText(getApplicationContext(), "Message Sent",
                     Toast.LENGTH_LONG).show();
+            reportUploadProgressBar.setVisibility(View.GONE);
+            finish();
         } catch (Exception ex) {
             Toast.makeText(getApplicationContext(),ex.getMessage().toString(),
                     Toast.LENGTH_LONG).show();
