@@ -7,6 +7,5 @@
     android:background="@drawable/bgappblank"
     tools:context=".ReportCreationActivity">
 
-
     <include layout="@layout/content_report_creation" />
 </ScrollView>

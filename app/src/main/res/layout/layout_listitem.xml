@@ -7,6 +7,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:cardElevation="8dp"
         android:id="@+id/itemCard"
         app:cardCornerRadius="10dp"
         android:layout_margin="10dp">
@@ -14,35 +15,49 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:padding="15dp"
             android:id="@+id/cardLayout">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/itemText"
                 android:text="Heading"
-                android:textColor="#000"
-                android:textSize="35dp"
-                android:layout_margin="5dp"/>
+                android:textStyle="bold"
+                android:textColor="#FFF"
+                android:textSize="35dp" />
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="160dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/itemDesc"
                 android:layout_below="@+id/itemText"
                 android:text="Description"
-                android:textColor="#000"
-                android:textSize="18dp"
-                android:layout_margin="5dp"/>
+                android:layout_marginBottom="15dp"
+                android:textColor="#FFF"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_below="@id/itemDesc"
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:id="@+id/itemTimestamp"
+                android:layout_alignParentBottom="true"
+                android:text="timestamp"
+                android:layout_marginBottom="25dp"
+                android:textColor="#FFF"
+                android:textSize="12dp" />
 
             <ImageView
-                android:layout_width="150dp"
-                android:layout_height="200dp"
                 android:id="@+id/itemImage"
+                android:layout_width="130dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:layout_height="180dp"
                 android:layout_below="@+id/itemDesc"
-                android:src="@mipmap/radio_check"
+                android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
-                android:layout_margin="5dp"/>
+                android:src="@mipmap/radio_check" />
 
         </RelativeLayout>
 
