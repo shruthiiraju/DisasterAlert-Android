@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="8dp"
+        android:id="@+id/itemCard"
+        app:cardCornerRadius="10dp"
+        android:layout_margin="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="15dp"
+            android:id="@+id/contactCardLayout">
+
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/contactText"
+                android:text="Heading"
+                android:textStyle="bold"
+                android:textColor="#000"
+                android:textSize="20dp"
+                android:layout_alignParentRight="true"/>
+
+            <TextView
+                android:layout_width="160dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/contactNumber"
+                android:layout_below="@+id/contactText"
+                android:text="Description"
+                android:layout_marginBottom="15dp"
+                android:textColor="#000"
+                android:textSize="18dp"
+                android:layout_alignParentRight="true"/>
+
+
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/contactImage"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_below="@+id/contactNumber"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentLeft="true"
+                android:src="@mipmap/account_circle" />
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>

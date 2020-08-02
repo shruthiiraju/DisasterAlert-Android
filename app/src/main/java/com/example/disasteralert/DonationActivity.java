@@ -33,6 +33,15 @@ public class DonationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_donation);
 
+        final Button makePayment = findViewById(R.id.make_donation);
+
+        makePayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                makeUPIPayments();
+            }
+        });
+
     }
 
     private void makeUPIPayments() {
