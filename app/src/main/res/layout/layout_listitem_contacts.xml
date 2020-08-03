@@ -26,7 +26,8 @@
                 android:textStyle="bold"
                 android:textColor="#000"
                 android:textSize="20dp"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"/>
 
             <TextView
                 android:layout_width="160dp"
@@ -34,10 +35,22 @@
                 android:id="@+id/contactNumber"
                 android:layout_below="@+id/contactText"
                 android:text="Description"
-                android:layout_marginBottom="15dp"
                 android:textColor="#000"
                 android:textSize="18dp"
-                android:layout_alignParentRight="true"/>
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="50dp"/>
+
+            <TextView
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/isSafe"
+                android:layout_below="@+id/contactNumber"
+                android:text="This person is marked safe"
+                android:layout_marginBottom="15dp"
+                android:textColor="#43A047"
+                android:textSize="16dp"
+                android:layout_alignParentRight="true" />
+
 
 
 
