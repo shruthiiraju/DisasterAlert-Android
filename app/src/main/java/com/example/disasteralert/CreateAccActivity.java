@@ -175,7 +175,7 @@ public class CreateAccActivity extends AppCompatActivity {
                 });
     }
 
-    private void dbUpdate(FirebaseUser currentUser, String name, String email, String number) {
+    private void dbUpdate(final FirebaseUser currentUser, String name, String email, String number) {
         Map<String, Object> user = new HashMap<>();
         user.put("name", name);
         user.put("email", email);
@@ -188,7 +188,19 @@ public class CreateAccActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "onSuccess: User Created");
+                        HashMap<String, Object> map = new HashMap<>();
+                        map.put("isSafe", "true");
+                        db.collection("users")
+                                .document(currentUser.getUid())
+                                .collection("isSafe")
+                                .document(currentUser.getPhoneNumber())
+                                .set(map)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        Log.d(TAG, "onSuccess: User Created");
+                                    }
+                                });
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
