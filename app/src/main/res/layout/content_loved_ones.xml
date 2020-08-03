@@ -25,7 +25,7 @@
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="People not seen? Add numbers"
+        android:text="@string/lovedOnesButton"
         android:id="@+id/addNumber"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"

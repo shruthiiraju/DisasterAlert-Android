@@ -1,4 +1,5 @@
 <resources>
+    <!-- Main activity -->
     <string name="app_name">DisasterAlert</string>
     <string name="action_settings">Settings</string>
     <string name="main_disaster_map">Disaster Map</string>
@@ -8,18 +9,20 @@
     <string name="main_loved_ones">Loved Ones</string>
     <string name="main_info">Survival Guide</string>
     <string name="title_activity_report_creation">File a Report</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="internet">Internet\u0020\u0020</string>
+    <string name="cellular">\u0020\u0020Cellular</string>
+    <string name="SOS">SOS!</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
     <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
     <string name="fcm_message">FCM Message</string>
 
-    <string name="hello_first_fragment">Hello first fragment</string>
-    <string name="hello_second_fragment">Hello second fragment. Arg: %1$s</string>
+    <!-- Report activity -->
     <string name="submit_report">Submit Report</string>
     <string name="getting_location">Getting Location…</string>
+    <string name="hindi">हिन्दी</string>
+    <string name="subheading">Tell us what\'s happening around you.</string>
+    <string name="reportType">Type of Event:</string>
     <string-array name="maps">
         <item>Flood</item>
         <item>Fire</item>
@@ -27,5 +30,24 @@
         <item>Injury</item>
         <item>Illness</item>
     </string-array>
+    <string name="numberPeople">"Number of people affected:"</string>
+    <string name="descTitle">"Description:"</string>
+    <string name="descHint">"Enter description..."</string>
+    <string name="addPhoto">"\u0020\u0020Add a Photo"</string>
     <string name="title_activity_loved_ones">LovedOnesActivity</string>
+
+
+    <!-- Donate activity -->
+    <string name="donateSubheading">"Make a donation to support relief efforts around the country."</string>
+    <string name="donateDetailsTitle">"Enter Details:"</string>
+    <string name="amountHint">"Amount"</string>
+    <string name="upiHint">"UPI id"</string>
+    <string name="nameHint">"Name"</string>
+    <string name="makePay">Make Payment</string>
+
+    <!--Live Feed -->
+    <string name="feedSubheading">"Get the latest updates around you."</string>
+
+    <!--Loved Ones-->
+    <string name="lovedOnesButton">"People not seen? Add numbers"</string>
 </resources>

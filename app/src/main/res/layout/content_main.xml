@@ -36,7 +36,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAllCaps="true"
-                    android:text="Internet  "
+                    android:text="@string/internet"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/green">
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textAllCaps="true"
-                    android:text="  Cellular"
+                    android:text="@string/cellular"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     android:textColor="@color/green">
@@ -288,7 +288,7 @@
                 <TextView
                     android:id="@+id/tvSOS"
                     android:layout_centerInParent="true"
-                    android:text="SOS!"
+                    android:text="@string/SOS"
                     android:textStyle="bold"
                     android:textColor="@android:color/white"
                     android:layout_gravity="center_vertical"

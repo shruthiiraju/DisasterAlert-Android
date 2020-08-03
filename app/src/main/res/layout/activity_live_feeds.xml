@@ -34,7 +34,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@android:color/white"
-            android:text="Get the latest updates around you.">
+            android:text="@string/feedSubheading">
         </TextView>
     </RelativeLayout>
 

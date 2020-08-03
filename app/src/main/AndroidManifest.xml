@@ -39,14 +39,17 @@
             android:value="@string/default_notification_channel_id" /> <!-- [END fcm_default_channel] -->
         <activity android:name=".CreateAccActivity" />
         <activity android:name=".LoginActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity android:name=".DisasterActivity" />
         <activity android:name=".DonationActivity" />
+        <activity android:name=".LanguageActivity"
+            android:noHistory="true">
+            <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter></activity>
+
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -59,6 +62,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
+            android:configChanges="locale|orientation"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <service

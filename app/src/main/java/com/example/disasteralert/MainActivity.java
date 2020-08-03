@@ -52,6 +52,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,11 +67,11 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "DisasterAlert";
 
-    protected static final long FASTEST_UPDATE_INTERVAL = 1 * 1000L;
-    protected static final long UPDATE_INTERVAL = 5 * 1000L;
-    protected static final long MAX_UPDATE_INTERVAL = 10 * 1000L;
+    protected static final long FASTEST_UPDATE_INTERVAL = 60 * 1000L;
+    protected static final long UPDATE_INTERVAL = 90 * 1000L;
+    protected static final long MAX_UPDATE_INTERVAL = 150 * 1000L;
     protected static final int STATUS_PING_REQUEST_CODE = 1;
-    protected static final long STATUS_PING_INTERVAL = 5 * 60 * 1000;  // 5 minutes
+    protected static final long STATUS_PING_INTERVAL = 10 * 60 * 1000;  // 5 minutes
 
     public static GetLocations locations;
     private Location staticlocation = null;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         //Initialising Firebase authentication

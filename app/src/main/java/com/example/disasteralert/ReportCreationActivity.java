@@ -41,6 +41,7 @@ import android.provider.MediaStore;
 import android.telephony.SmsManager;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -74,7 +75,7 @@ public class ReportCreationActivity extends AppCompatActivity {
     private static final String TAG = "DisasterAlert";
 
     private static final String[] PEOPLE_AFFECTED_PICKER_CHOICES = new String[]{"None", "1", "5", "10", "<50", "50+"};
-    private static final String[] eventTypes = { "Flood", "Fire", "Injury", "Illness", "Earthquake","Relief","Critical" };
+
     private static final int REQUEST_IMAGE_CAPTURE = 1;
 
     private NumberPicker peopleAffectedPicker;
@@ -99,6 +100,8 @@ public class ReportCreationActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_report_creation);
 
         db = FirebaseFirestore.getInstance();
@@ -106,6 +109,7 @@ public class ReportCreationActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
 
         //Initialising layout components
+        final String[] eventTypes = getResources().getStringArray(R.array.maps);
         reportTypeSpinner = (Spinner) findViewById(R.id.spinnerReportType);
         peopleAffectedPicker = findViewById(R.id.picker_people_affected);
         addPictureButton = findViewById(R.id.button_add_picture);

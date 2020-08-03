@@ -6,7 +6,7 @@
     <color name="red">#DC143C</color>
     <color name="green">#32CD32</color>
     <color name="colorTransparent">#00ffffff</color>
-    <color name="colorGradientStart">#fdf500</color>
+    <color name="colorGradientStart">#ff8a65</color>
     <color name="colorGradientCenter">#f44336</color>
     <color name="colorGradientEnd">#d50000</color>
 </resources>

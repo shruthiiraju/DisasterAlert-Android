@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@android:color/white"
-            android:text="Make a donation to support relief efforts around the country.">
+            android:text="@string/donateSubheading">
         </TextView>
     </RelativeLayout>
 
@@ -72,7 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Enter Details:"
+            android:text="@string/donateDetailsTitle"
             android:textColor="#000"
             android:layout_margin="10dp"
             android:textSize="20dp"
@@ -81,28 +81,28 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Amount"
+            android:hint="@string/amountHint"
             android:layout_margin="10dp"
             android:id="@+id/value_donation"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="UPI id"
+            android:hint="@string/upiHint"
             android:layout_margin="10dp"
             android:id="@+id/upi_id_donation"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Name"
+            android:hint="@string/nameHint"
             android:layout_margin="10dp"
             android:id="@+id/name_donation"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Note"
+            android:hint="@string/descHint"
             android:layout_margin="10dp"
             android:id="@+id/note_donation"/>
 
@@ -110,7 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textStyle="bold"
-            android:text="Make Payment"
+            android:text="@string/makePay"
             android:background="@drawable/rounded_button"
             android:textColor="@android:color/white"
             android:layout_margin="10dp"

@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">आपदा चेतावनी</string>
+    <string name="action_settings">समायोजन</string>
+    <string name="main_disaster_map">आपदा का नक्शा</string>
+    <string name="main_report">रिपोर्ट करें</string>
+    <string name="main_donate">दान करना</string>
+    <string name="main_live_feed">लाइव फीड</string>
+    <string name="main_loved_ones">प्रियजनों</string>
+    <string name="main_info">उत्तरजीविता</string>
+    <string name="title_activity_report_creation">File a Report</string>
+    <string name="internet">इंटरनेट\u0020\u0020</string>
+    <string name="cellular">\u0020\u0020सेलुलर</string>
+    <string name="SOS">बचाओ!</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="default_notification_channel_id" translatable="false">fcm_default_channel</string>
+    <string name="fcm_message">FCM Message</string>
+    <string name="hindi">हिन्दी</string>
+
+    <string name="submit_report">विवरणी जमा करें</string>
+    <string name="getting_location">स्थान मिल रहा है…</string>
+    <string name="subheading">हमें बताएं कि आपके आसपास क्या हो रहा है.</string>
+    <string name="reportType">घटना के प्रकार</string>
+    <string-array name="maps">
+        <item>बाढ़</item>
+        <item>आग</item>
+        <item>भूकंप</item>
+        <item>चोट</item>
+        <item>बीमारी</item>
+    </string-array>
+    <string name="numberPeople">"कितने लोग प्रभावित हुए:"</string>
+    <string name="descTitle">"विवरण:"</string>
+    <string name="descHint">"विवरण लिखें..."</string>
+    <string name="addPhoto">"\u0020\u0020तस्वीर जोड़ो"</string>
+    <string name="title_activity_loved_ones">LovedOnesActivity</string>
+
+    <!-- DOnate -->
+    <string name="donateSubheading">"देश भर में राहत प्रयासों का समर्थन करने के लिए दान करें."</string>
+    <string name="donateDetailsTitle">"विवरण लिखें:"</string>
+    <string name="amountHint">"रकम"</string>
+    <string name="upiHint">"यूपीआई आई.डी."</string>
+    <string name="nameHint">"नाम"</string>
+    <string name="makePay">भुगतान करो</string>
+
+    <!--Live Feed -->
+    <string name="feedSubheading">"अपने आस-पास नवीनतम अपडेट प्राप्त करें."</string>
+
+    <!--Loved Ones-->
+    <string name="lovedOnesButton">"लोग नहीं दिखे? संख्याएँ जोड़ें"</string>
+</resources>
