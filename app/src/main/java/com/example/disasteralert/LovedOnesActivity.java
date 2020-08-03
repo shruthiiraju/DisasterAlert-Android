@@ -46,10 +46,10 @@ public class LovedOnesActivity extends AppCompatActivity {
     private final int REQUEST_CODE=99;
     private final int CONTACTS_PERMISSION_CODE = 10;
     private final String TAG = "LovedOnesActivity";
-    private ArrayList<String> numbers, names, images, safes, userNumbers, userSafes;
+    private ArrayList<String> numbers, names, images, safes, userNumbers, userSafes, userIds;
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private boolean flag = false;
+    private boolean flag = false, isFlag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +71,7 @@ public class LovedOnesActivity extends AppCompatActivity {
         userNumbers = new ArrayList<>();
         safes = new ArrayList<>();
         userSafes = new ArrayList<>();
+        userIds = new ArrayList<>();
 
         //setting onClicks
         getContacts.setOnClickListener(new View.OnClickListener() {
@@ -280,22 +281,38 @@ public class LovedOnesActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document: task.getResult()){
+                            for(QueryDocumentSnapshot document: task.getResult()) {
                                 userNumbers.add("+91" + document.get("number"));
-                                try{
-                                    userSafes.add((String)document.get("safe"));
-                                }
-                                catch (Exception e) {
-                                    userSafes.add("true");
-                                }
+                                userIds.add((String)document.get("uid"));
                             }
-                            if(stage)
-                                addToDataBaseContd();
-                            else
-                                loadRecyclerView();
+                            //make second request
+                            addToDataBase2(stage);
                         }
                     }
                 });
+    }
+
+    private void addToDataBase2(final boolean stage) {
+        for(String id: userIds) {
+            db.collection("users")
+                    .document(id)
+                    .collection("isSafe")
+                    .document(userNumbers.get(userIds.indexOf(id)))
+                    .get()
+                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                            if(task.isSuccessful())
+                                userSafes.add(String.valueOf(task.getResult().get("isSafe")));
+                            if(userSafes.size() == userIds.size()){
+                                if(stage)
+                                    addToDataBaseContd();
+                                else
+                                    loadRecyclerView();
+                            }
+                        }
+                    });
+        }
     }
 
     private void addToDataBaseContd() {
@@ -336,7 +353,7 @@ public class LovedOnesActivity extends AppCompatActivity {
     }
 
     private void getsafes() {
-        for(String num: numbers){
+        for (String num : numbers) {
             int i = userNumbers.indexOf(num);
             safes.add(userSafes.get(i));
         }
