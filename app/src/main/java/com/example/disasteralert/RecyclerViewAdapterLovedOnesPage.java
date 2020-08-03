@@ -57,10 +57,16 @@ public class RecyclerViewAdapterLovedOnesPage extends RecyclerView.Adapter<Recyc
                     .into(holder.image);
         }
         if(safes.get(position) == null || safes.get(position).equals("true")){
+            Log.d(TAG, "onBindViewHolder: " + safes.get(position));
             holder.parent_layout.setBackgroundColor(Color.parseColor("#43A047"));
+            holder.isSafe.setText("Person is marked safe");
+            holder.isSafe.setTextColor(Color.parseColor("#000000"));
         }
-        else
+        else {
             holder.parent_layout.setBackgroundColor(Color.parseColor("#D84315"));
+            holder.isSafe.setText("PERSON IS MARKED UNSAFE");
+            holder.isSafe.setTextColor(Color.parseColor("#FFFFFF"));
+        }
     }
 
     @Override
@@ -70,7 +76,7 @@ public class RecyclerViewAdapterLovedOnesPage extends RecyclerView.Adapter<Recyc
 
     public class ViewHolder extends RecyclerView.ViewHolder{
 
-        TextView head, num;
+        TextView head, num, isSafe;
         CircleImageView image;
         RelativeLayout parent_layout;
 
@@ -79,6 +85,7 @@ public class RecyclerViewAdapterLovedOnesPage extends RecyclerView.Adapter<Recyc
             image = itemView.findViewById(R.id.contactImage);
             head = itemView.findViewById(R.id.contactText);
             num = itemView.findViewById(R.id.contactNumber);
+            isSafe = itemView.findViewById(R.id.isSafe);
             parent_layout = itemView.findViewById(R.id.contactCardLayout);
         }
     }

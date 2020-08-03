@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -65,6 +67,7 @@ public class LovedOnesActivity extends AppCompatActivity {
 
         //initialising local variables
         final Button getContacts = findViewById(R.id.addNumber);
+        final TextView currentStatus = findViewById(R.id.currentStatus);
         numbers = new ArrayList<>();
         names = new ArrayList<>();
         images = new ArrayList<>();
@@ -83,6 +86,29 @@ public class LovedOnesActivity extends AppCompatActivity {
         });
         checkPermission(Manifest.permission.READ_CONTACTS, CONTACTS_PERMISSION_CODE);
         getDataBaseContacts();
+
+        db.collection("users")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("isSafe")
+                .document(mAuth.getCurrentUser().getPhoneNumber())
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if(task.isSuccessful()){
+                            String safe = String.valueOf(task.getResult().get("isSafe"));
+                            if(safe.equals("true")){
+                                currentStatus.setText("Current Status: Safe");
+                                currentStatus.setTextColor(Color.parseColor("#43A047"));
+                            }
+                            else {
+                                currentStatus.setText("Current Status: UNSAFE");
+                                currentStatus.setTextColor(Color.parseColor("#D84315"));
+                            }
+                        }
+                    }
+                });
+
     }
 
     private void updateDBWithSafeStatus(boolean isSafe, final int notificationId) {
@@ -130,6 +156,7 @@ public class LovedOnesActivity extends AppCompatActivity {
                                         numbers.add(num);
                                         names.add(num);
                                         images.add(num);
+                                        safes.add(num);
                                         Log.d(TAG, "onComplete: " + num);
                                     }
                                     getContactFromNumber();
@@ -284,6 +311,7 @@ public class LovedOnesActivity extends AppCompatActivity {
                             for(QueryDocumentSnapshot document: task.getResult()) {
                                 userNumbers.add("+91" + document.get("number"));
                                 userIds.add((String)document.get("uid"));
+                                userSafes.add("+91" + document.get("number"));
                             }
                             //make second request
                             addToDataBase2(stage);
@@ -303,8 +331,9 @@ public class LovedOnesActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                             if(task.isSuccessful())
-                                userSafes.add(String.valueOf(task.getResult().get("isSafe")));
+                                userSafes.set(userNumbers.indexOf(task.getResult().getId()), String.valueOf(task.getResult().get("isSafe")));
                             if(userSafes.size() == userIds.size()){
+                                Log.d(TAG, "onComplete: " + userSafes);
                                 if(stage)
                                     addToDataBaseContd();
                                 else
@@ -353,11 +382,13 @@ public class LovedOnesActivity extends AppCompatActivity {
     }
 
     private void getsafes() {
-        Log.d(TAG, numbers.toString());
+        Log.d(TAG, "getsafes: Numbers: " + numbers);
+        Log.d(TAG, "getsafes: globalNumbers: " + userNumbers);
         for (String num : numbers) {
             int i = userNumbers.indexOf(num);
-            safes.add(userSafes.get(i));
+            int j = numbers.indexOf(num);
+            safes.set(j, userSafes.get(i));
         }
-        Log.d(TAG, "getsafes: " + safes);
+        Log.d(TAG, "getsafes: " + safes + " " + userSafes);
     }
 }
