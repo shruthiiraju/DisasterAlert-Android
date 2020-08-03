@@ -353,6 +353,7 @@ public class LovedOnesActivity extends AppCompatActivity {
     }
 
     private void getsafes() {
+        Log.d(TAG, numbers.toString());
         for (String num : numbers) {
             int i = userNumbers.indexOf(num);
             safes.add(userSafes.get(i));
