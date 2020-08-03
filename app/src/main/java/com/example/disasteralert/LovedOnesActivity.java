@@ -15,6 +15,7 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,6 +26,7 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -54,6 +56,13 @@ public class LovedOnesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loved_ones);
 
+        db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
+        if (getIntent().hasExtra("isSafe")) {
+            updateDBWithSafeStatus(getIntent().getBooleanExtra("isSafe", true), getIntent().getIntExtra("notificationId", 0));
+        }
+
         //initialising local variables
         final Button getContacts = findViewById(R.id.addNumber);
         numbers = new ArrayList<>();
@@ -62,9 +71,6 @@ public class LovedOnesActivity extends AppCompatActivity {
         userNumbers = new ArrayList<>();
         safes = new ArrayList<>();
         userSafes = new ArrayList<>();
-
-        db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
 
         //setting onClicks
         getContacts.setOnClickListener(new View.OnClickListener() {
@@ -76,6 +82,33 @@ public class LovedOnesActivity extends AppCompatActivity {
         });
         checkPermission(Manifest.permission.READ_CONTACTS, CONTACTS_PERMISSION_CODE);
         getDataBaseContacts();
+    }
+
+    private void updateDBWithSafeStatus(boolean isSafe, final int notificationId) {
+        HashMap<String, Object> updateMap = new HashMap<>();
+        updateMap.put("isSafe", isSafe);
+
+        db.collection("users")
+                .document(mAuth.getCurrentUser().getUid())
+                .collection("isSafe")
+                .document(mAuth.getCurrentUser().getPhoneNumber())
+
+                .set(updateMap)
+
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        NotificationManagerCompat.from(LovedOnesActivity.this).cancel(notificationId);
+
+                        Toast.makeText(LovedOnesActivity.this, "Status updated", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: ", e);
+                    }
+                });
     }
 
     private void getDataBaseContacts() {
