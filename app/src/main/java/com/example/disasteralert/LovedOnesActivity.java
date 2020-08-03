@@ -130,6 +130,7 @@ public class LovedOnesActivity extends AppCompatActivity {
                                         numbers.add(num);
                                         names.add(num);
                                         images.add(num);
+                                        safes.add(num);
                                         Log.d(TAG, "onComplete: " + num);
                                     }
                                     getContactFromNumber();
@@ -305,6 +306,7 @@ public class LovedOnesActivity extends AppCompatActivity {
                             if(task.isSuccessful())
                                 userSafes.add(String.valueOf(task.getResult().get("isSafe")));
                             if(userSafes.size() == userIds.size()){
+                                Log.d(TAG, "onComplete: " + userSafes);
                                 if(stage)
                                     addToDataBaseContd();
                                 else
@@ -353,10 +355,13 @@ public class LovedOnesActivity extends AppCompatActivity {
     }
 
     private void getsafes() {
+        Log.d(TAG, "getsafes: Numbers: " + numbers);
+        Log.d(TAG, "getsafes: globalNumbers: " + userNumbers);
         for (String num : numbers) {
             int i = userNumbers.indexOf(num);
-            safes.add(userSafes.get(i));
+            int j = numbers.indexOf(num);
+            safes.set(j, userSafes.get(i));
         }
-        Log.d(TAG, "getsafes: " + safes);
+        Log.d(TAG, "getsafes: " + safes + " " + userSafes);
     }
 }
